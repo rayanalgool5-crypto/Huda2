@@ -1,0 +1,39 @@
+# Huda Backend - Environment Configuration
+# ضع مفتاح Infobip الحقيقي فقط في INFOBIP_API_KEY
+# لا تضع هذا الملف على GitHub ولا ترسل المفتاح لأحد.
+
+# Server
+PORT=3000
+NODE_ENV=development
+
+# Session
+SESSION_SECRET=change-this-to-a-strong-random-string-min-32-characters
+
+# Database
+DB_PATH=./data/huda.db
+
+# CORS
+CLIENT_URL=http://localhost:3000
+
+# =========================
+# Infobip Email API
+# =========================
+# Base URL الخاص بحسابك في Infobip
+INFOBIP_BASE_URL=https://nd91q8.api.infobip.com
+
+# الصق مفتاح API هنا بين علامة = فقط
+INFOBIP_API_KEY=4ad578e8962f800ad0a98ab7da7b56a4-5a71bf50-ed16-4575-a3f7-c9827d00073f
+
+# بريد المرسل
+# أثناء التجربة استخدم البريد الموثق في حساب Infobip
+INFOBIP_FROM=apphuda1@gmail.com
+INFOBIP_REPLY_TO=apphuda1@gmail.com
+
+# Password Reset / Email OTP
+PASSWORD_RESET_OTP_LENGTH=6
+PASSWORD_RESET_OTP_TTL_MINUTES=10
+PASSWORD_RESET_MAX_ATTEMPTS=5
+PASSWORD_RESET_RESEND_COOLDOWN_SECONDS=60
+
+# Frontend URL used in reset links
+FRONTEND_URL=http://localhost:3000

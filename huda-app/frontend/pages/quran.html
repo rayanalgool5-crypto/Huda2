@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087c62">
+  <title>القرآن الكريم | هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell quran-reader-page">
+  <header class="site-header">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/logo.png" alt="هُدى"></a>
+    <button class="nav-trigger" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="التنقل الرئيسي">
+      <a href="../index.html">الرئيسية</a><a class="active" href="quran.html">القرآن الكريم</a><a href="hadith.html">الحديث الشريف</a><a href="prayer-times.html">مواقيت الصلاة</a><a href="tasbeeh.html">التسبيح والأذكار</a><a href="stats.html">الإحصائيات والتقدم</a><a href="about.html">من أنا</a><a href="contact.html">تواصل معي</a>
+    </nav>
+    <div class="header-actions"><button class="icon-button theme-toggle" aria-label="تفعيل الوضع الداكن" title="تبديل المظهر">☾</button><button class="logout-button">تسجيل الخروج</button></div>
+  </header>
+
+  <main class="section-wrap page-main quran-page-main">
+    <div class="page-intro quran-intro">
+      <div><p class="eyebrow">كتاب الله</p><h1>القرآن الكريم</h1><p>استمع، اقرأ صفحات المصحف، واختبر حفظك عبر المايك — في مكان واحد. سجّل دخولك لمزامنة موضع القراءة بين أجهزتك.</p></div>
+      <div class="quran-ornament" aria-hidden="true">۞</div>
+    </div>
+
+    <div id="review-reminder" class="review-reminder" role="status" hidden>
+      <span></span>
+      <a class="button button-secondary" href="quran.html#memorize">ابدأ المراجعة</a>
+      <button type="button" id="enable-review-notifications" class="text-button">فعّل التذكيرات</button>
+    </div>
+
+    <div class="quran-tabs" role="tablist" aria-label="أقسام القرآن الكريم">
+      <button type="button" class="quran-tab active" id="tab-btn-listen" data-tab="listen" role="tab" aria-selected="true" aria-controls="tab-listen"><span class="quran-tab-icon" aria-hidden="true">🎧</span>الاستماع</button>
+      <button type="button" class="quran-tab" id="tab-btn-read" data-tab="read" role="tab" aria-selected="false" aria-controls="tab-read"><span class="quran-tab-icon" aria-hidden="true">📖</span>القراءة</button>
+      <button type="button" class="quran-tab" id="tab-btn-memorize" data-tab="memorize" role="tab" aria-selected="false" aria-controls="tab-memorize"><span class="quran-tab-icon" aria-hidden="true">🕌</span>الحفظ</button>
+    </div>
+
+    <section class="quran-workspace" id="tab-listen" data-tab-panel="listen" role="tabpanel" aria-labelledby="tab-btn-listen" aria-label="قارئ القرآن الكريم">
+      <div class="quran-toolbar">
+        <label class="toolbar-field"><span>السورة</span><select id="surah-select" aria-label="اختيار السورة"><option>جاري تحميل السور…</option></select></label>
+        <label class="toolbar-field"><span>القارئ</span><select id="reciter" aria-label="اختيار القارئ">
+          <option value="Alafasy_128kbps">مشاري العفاسي</option>
+          <option value="Minshawy_Mujawwad_192kbps">محمد صديق المنشاوي</option>
+          <option value="Husary_128kbps">محمود خليل الحصري</option>
+          <option value="Abdul_Basit_Murattal_192kbps">عبد الباسط عبد الصمد</option>
+        </select></label>
+        <div class="font-size-controls" role="group" aria-label="حجم خط الآيات"><span>حجم الخط</span><button id="decrease-font" type="button" aria-label="تصغير خط الآيات">−</button><output id="font-size-label">28</output><button id="increase-font" type="button" aria-label="تكبير خط الآيات">+</button></div>
+        <label class="repeat-toggle"><input id="repeat-verse" type="checkbox"><span>تكرار الآية</span></label>
+      </div>
+
+      <div class="reader-layout quran-reader-layout">
+        <aside class="surah-panel">
+          <label class="search-box"><span>⌕</span><input id="surah-search" type="search" placeholder="ابحث عن سورة" aria-label="البحث عن سورة"></label>
+          <div id="surah-list" class="surah-list" aria-live="polite"><div class="loading">جاري تحميل السور…</div></div>
+        </aside>
+
+        <section class="reader-panel mushaf-panel">
+          <div class="reader-toolbar mushaf-toolbar">
+            <div><span id="surah-meta" class="card-label">المصحف الشريف</span><h2 id="surah-title">اختر سورة للبدء</h2></div>
+            <div class="reader-side-tools">
+              <div id="reading-progress" class="reading-progress" role="status" aria-live="polite" aria-label="تقدم إكمال آيات السورة" style="--progress: 0"><strong id="reading-progress-value">٠٪</strong><small>إنجاز السورة</small></div>
+              <label class="search-box verse-search"><span>⌕</span><input id="verse-search" type="search" placeholder="ابحث في الآيات" aria-label="البحث في آيات السورة"></label>
+            </div>
+          </div>
+          <p id="completion-status" class="completion-status" aria-live="polite">استمع إلى الآيات، وسيزداد مؤشر الإنجاز عند اكتمال كل آية.</p>
+          <div id="verses" class="verses quran-verses" aria-live="polite"><div class="empty-state">اختر سورة من القائمة لعرض آياتها.</div></div>
+        </section>
+      </div>
+
+      <section id="audio-player" class="quran-audio-player" aria-label="مشغل التلاوة">
+        <div class="audio-info"><span class="now-playing-label">التلاوة الحالية</span><strong id="now-playing">اختر آية للاستماع</strong></div>
+        <div class="player-controls"><button id="prev-verse" class="icon-button" type="button" aria-label="الآية السابقة">⏮</button><button id="play-pause" class="play-button" type="button" aria-label="تشغيل">▶</button><button id="next-verse" class="icon-button" type="button" aria-label="الآية التالية">⏭</button></div>
+        <div class="audio-timeline"><input id="audio-progress" type="range" min="0" max="100" value="0" aria-label="موضع التلاوة"><output id="audio-time">٠:٠٠ / ٠:٠٠</output></div>
+        <audio id="quran-audio" preload="none"></audio>
+      </section>
+    </section>
+
+    <section class="quran-workspace read-workspace" id="tab-read" data-tab-panel="read" role="tabpanel" aria-labelledby="tab-btn-read" hidden aria-label="قارئ صفحات المصحف">
+      <div class="quran-toolbar">
+        <label class="toolbar-field"><span>السورة</span><select id="read-surah-select" aria-label="اختيار السورة"><option>جاري تحميل السور…</option></select></label>
+        <label class="toolbar-field page-jump-field"><span>الصفحة</span><input id="read-page-input" type="number" min="1" max="604" value="1" aria-label="الانتقال لصفحة"></label>
+        <div class="font-size-controls" role="group" aria-label="حجم خط الصفحة"><span>حجم الخط</span><button id="read-decrease-font" type="button" aria-label="تصغير الخط">−</button><output id="read-font-size-label">26</output><button id="read-increase-font" type="button" aria-label="تكبير الخط">+</button></div>
+        <p class="mushaf-source-note">النص العثماني موثّق من قاعدة بيانات <a href="https://tanzil.net" target="_blank" rel="noopener">Tanzil.net</a> المعتمدة، بترقيم صفحات مصحف المدينة (٦٠٤ صفحة).</p>
+      </div>
+
+      <div class="mushaf-page-shell">
+        <button type="button" id="read-next-page" class="mushaf-nav-button" aria-label="الصفحة التالية">‹ التالية</button>
+        <article class="mushaf-page" aria-live="polite">
+          <header class="mushaf-page-head">
+            <span id="read-juz-label">الجزء ١</span>
+            <span class="mushaf-page-ornament" aria-hidden="true">﴾ ۩ ﴿</span>
+            <span id="read-page-label">صفحة ١</span>
+          </header>
+          <div id="mushaf-content" class="mushaf-content">
+            <div class="loading">جاري تحميل صفحة المصحف…</div>
+          </div>
+        </article>
+        <button type="button" id="read-prev-page" class="mushaf-nav-button" aria-label="الصفحة السابقة">السابقة ›</button>
+      </div>
+      <div class="mushaf-page-slider-wrap">
+        <input id="read-page-slider" type="range" min="1" max="604" value="1" aria-label="شريط تصفح صفحات المصحف">
+      </div>
+    </section>
+
+    <section class="quran-workspace memorize-workspace" id="tab-memorize" data-tab-panel="memorize" role="tabpanel" aria-labelledby="tab-btn-memorize" hidden aria-label="اختبار الحفظ عبر المايك">
+      <section id="mem-auth-gate" class="auth-gate" hidden>
+        <h2>سجّل دخولك لبدء الحفظ</h2>
+        <p>تتبع الحفظ والتصحيح والإحصائيات محفوظ في حسابك مباشرة حتى لا يضيع تقدّمك.</p>
+        <a class="button button-primary" href="login.html">تسجيل الدخول</a>
+        <a class="button button-secondary" href="register.html">إنشاء حساب</a>
+      </section>
+
+      <div id="mem-workspace" hidden>
+        <div class="quran-toolbar">
+          <label class="toolbar-field"><span>السورة</span><select id="mem-surah-select" aria-label="اختيار سورة للحفظ"><option>جاري تحميل السور…</option></select></label>
+          <label class="repeat-toggle"><input id="mem-hide-text" type="checkbox"><span>إخفاء النص (اختبار حقيقي)</span></label>
+          <button type="button" id="mem-quick-review" class="button button-secondary">مراجعة سريعة</button>
+          <div id="mem-progress" class="reading-progress" role="status" aria-live="polite" aria-label="تقدم حفظ السورة" style="--progress: 0"><strong id="mem-progress-value">٠٪</strong><small>إتقان السورة</small></div>
+          <span id="mem-accuracy" class="mem-accuracy">نسبة الإتقان: —</span>
+        </div>
+
+        <p id="mem-review-banner" class="completion-status" hidden></p>
+        <p id="mem-support-warning" class="completion-status mem-warning" hidden>متصفحك الحالي لا يدعم التعرف على الصوت. يمكنك التسميع كتابةً، أو استخدم Chrome لاستعمال المايك.</p>
+
+        <div class="memorize-panel">
+          <div class="memorize-verse-card">
+            <div class="memorize-verse-meta">
+              <span id="mem-surah-title" class="card-label">اختر سورة لبدء التسميع</span>
+              <span id="mem-verse-counter">— / —</span>
+            </div>
+            <p id="mem-verse-text" class="memorize-verse-text">اختر سورة من القائمة، ثم اقرأ بالمايك أو اكتب الآية كلمة كلمة.</p>
+            <p id="mem-feedback" class="memorize-feedback" aria-live="polite"></p>
+            <ul id="mem-errors" class="mem-errors" aria-live="polite" hidden></ul>
+          </div>
+
+          <div class="memorize-controls">
+            <button type="button" id="mem-mic-button" class="mic-button" aria-pressed="false" aria-label="بدء التسميع">
+              <span class="mic-icon" aria-hidden="true">🎙</span>
+              <span id="mem-mic-label">ابدأ التسميع</span>
+            </button>
+
+            <div class="memorize-typed">
+              <label class="sr-only" for="mem-typed-input">اكتب الكلمة أو الآية</label>
+              <input id="mem-typed-input" type="text" placeholder="اكتب الكلمة التالية…" autocomplete="off" disabled>
+              <button type="button" id="mem-typed-submit" class="button button-primary" disabled>تحقّق</button>
+              <button type="button" id="mem-hint" class="button button-secondary" disabled>تلميح (الحرف الأول)</button>
+            </div>
+
+            <div class="memorize-secondary-controls">
+              <button type="button" id="mem-listen-correct" class="button button-secondary" disabled>استمع للنطق الصحيح</button>
+              <button type="button" id="mem-repeat-verse" class="button button-secondary" disabled>إعادة الآية</button>
+              <button type="button" id="mem-next-verse" class="button button-secondary" disabled title="أتقن الآية الحالية 100% أولاً">الآية التالية</button>
+              <button type="button" id="mem-record" class="button button-secondary" disabled>🎙 سجّل وقارن</button>
+            </div>
+
+            <div id="mem-compare" class="memorize-compare" hidden>
+              <p class="memorize-compare-note">تسجيلك محفوظ على جهازك فقط ويُحذف تلقائياً بعد المقارنة أو عند مغادرة الشاشة.</p>
+              <div class="memorize-compare-actions">
+                <button type="button" id="mem-play-user" class="button button-secondary">استمع لتسجيلك</button>
+                <button type="button" id="mem-play-sheikh" class="button button-secondary">استمع للشيخ</button>
+                <button type="button" id="mem-discard" class="text-button">احذف التسجيل</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <audio id="mem-audio" preload="none"></audio>
+      <audio id="mem-user-audio" preload="none"></audio>
+    </section>
+  </main>
+
+  <footer class="site-footer"><small class="footer-copyright">© 2026 هُدى. جميع الحقوق محفوظة.</small>
+    <div class="footer-social">
+      <a href="https://wa.me/0790952486" target="_blank" rel="noopener" aria-label="تواصل معي عبر واتساب"><img src="../assets/whatsapp.svg" alt="واتساب"></a>
+   <a href="https://instagram.com/rayan_algool2" target="_blank" rel="noopener" aria-label="تابعني على انستقرام"><img src="../assets/instagram.svg" alt="انستقرام"></a>
+    </div>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/verse-diff.js"></script>
+  <script src="../js/memorization-api.js"></script>
+  <script src="../js/recorder-compare.js"></script>
+  <script src="../js/review-reminders.js"></script>
+  <script src="../js/quran.js"></script>
+  <script src="../js/quran-read.js"></script>
+  <script src="../js/quran-memorize.js"></script>
+  <script src="../js/quran-tabs.js"></script>
+</body>
+</html>

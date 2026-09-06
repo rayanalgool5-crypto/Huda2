@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#087c62">
+  <title>حسابي | هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell">
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="الذهاب للرئيسية"><img class="brand-logo" src="../assets/logo.png" alt="هُدى"></a>
+    <button class="nav-trigger" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="التنقل الرئيسي">
+      <a href="../index.html">الرئيسية</a><a href="quran.html">القرآن الكريم</a><a href="hadith.html">الحديث الشريف</a>
+      <a href="prayer-times.html">مواقيت الصلاة</a><a href="tasbeeh.html">التسبيح والأذكار</a><a href="stats.html">الإحصائيات والتقدم</a>
+      <a href="about.html">من أنا</a><a href="contact.html">تواصل معي</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button theme-toggle" aria-label="تفعيل الوضع الداكن" title="تبديل المظهر">☾</button>
+      <button class="logout-button">الحساب</button>
+    </div>
+  </header>
+
+  <main class="section-wrap page-main account-page">
+    <div class="page-intro">
+      <p class="eyebrow">مساحتك الشخصية</p>
+      <h1>حسابي</h1>
+      <p>إدارة بيانات حسابك، مع أدوات واضحة لتعديلها وحماية حسابك.</p>
+    </div>
+
+    <section id="account-card" class="account-card" hidden aria-live="polite">
+      <div class="account-avatar" aria-hidden="true">ه</div>
+      <div class="account-details">
+        <span class="card-label">المستخدم</span>
+        <h2 id="account-name">—</h2>
+        <p id="account-email">—</p>
+      </div>
+    </section>
+
+    <section class="account-settings-grid">
+      <article class="account-settings-card">
+        <div>
+          <span class="card-label">الاسم</span>
+          <h2>تعديل الاسم</h2>
+          <p id="name-limit-message">جارٍ تحميل عدد مرات التغيير المتاحة...</p>
+        </div>
+        <form id="name-form" class="account-form" novalidate>
+          <label>الاسم الجديد
+            <input id="new-name" name="name" type="text" minlength="2" maxlength="50" autocomplete="name" required>
+          </label>
+          <p id="name-message" class="form-message" role="alert" aria-live="polite"></p>
+          <button class="button button-primary" type="submit">حفظ الاسم</button>
+        </form>
+      </article>
+
+      <article class="account-settings-card">
+        <div>
+          <span class="card-label">البريد الإلكتروني</span>
+          <h2>تعديل البريد</h2>
+          <p>للحماية، يجب تأكيد كلمة السر الحالية عند تغيير البريد.</p>
+        </div>
+        <form id="email-form" class="account-form" novalidate>
+          <label>البريد الجديد
+            <input id="new-email" name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>كلمة السر الحالية
+            <input name="currentPassword" type="password" autocomplete="current-password" required>
+          </label>
+          <p id="email-message" class="form-message" role="alert" aria-live="polite"></p>
+          <button class="button button-primary" type="submit">حفظ البريد</button>
+        </form>
+      </article>
+
+      <article class="account-settings-card">
+        <div>
+          <span class="card-label">كلمة السر</span>
+          <h2>تغيير كلمة السر</h2>
+          <p>أدخل كلمة السر الحالية والجديدة مباشرة، بدون الحاجة لرمز عبر البريد الإلكتروني.</p>
+        </div>
+        <form id="password-form" class="account-form" novalidate>
+          <label>كلمة السر الحالية
+            <input name="currentPassword" type="password" autocomplete="current-password" required>
+          </label>
+          <label>كلمة السر الجديدة
+            <input name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+          </label>
+          <label>تأكيد كلمة السر الجديدة
+            <input name="confirmNewPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+          </label>
+          <p id="password-message" class="form-message" role="alert" aria-live="polite"></p>
+          <button class="button button-primary" type="submit">حفظ كلمة السر</button>
+        </form>
+        <p class="auth-switch"><a href="forgot-password.html">نسيت كلمة السر الحالية؟</a></p>
+      </article>
+
+      <article class="account-settings-card danger-card">
+        <div>
+          <span class="card-label">منطقة الخطر</span>
+          <h2>حذف الحساب</h2>
+          <p>حذف الحساب نهائي، وستُحذف بيانات الحفظ والإحصائيات المرتبطة به.</p>
+        </div>
+        <button type="button" id="open-delete" class="button danger-button">حذف الحساب</button>
+      </article>
+    </section>
+
+    <section class="account-actions-card">
+      <a class="button button-secondary" href="stats.html">عرض الإحصائيات والتقدم</a>
+      <a class="button button-secondary" href="quran.html#memorize">متابعة الحفظ</a>
+      <button type="button" id="account-logout" class="button account-logout-button" data-account-logout>تسجيل الخروج</button>
+    </section>
+  </main>
+
+  <div id="delete-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-title" hidden>
+    <div class="modal-backdrop" data-close-delete></div>
+    <article class="modal-content">
+      <button class="modal-close" data-close-delete aria-label="إغلاق">×</button>
+      <p class="eyebrow">حذف الحساب</p>
+      <h2 id="delete-title">تأكيد الحذف النهائي</h2>
+      <p>أدخل كلمة السر الحالية لتأكيد حذف الحساب. لا يوجد خيار «نسيت كلمة السر» في هذه العملية.</p>
+      <form id="delete-form" class="account-form" novalidate>
+        <label>كلمة السر
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <label>اكتب «حذف حسابي» للتأكيد
+          <input name="confirmation" type="text" autocomplete="off" required>
+        </label>
+        <p id="delete-message" class="form-message" role="alert" aria-live="polite"></p>
+        <div class="modal-actions">
+          <button type="button" class="button button-secondary" data-close-delete>إلغاء</button>
+          <button type="submit" class="button danger-button">حذف نهائي</button>
+        </div>
+      </form>
+    </article>
+  </div>
+
+  <footer class="site-footer">رفيقك اليومي في طريق الخير <span>✦</span><small class="footer-copyright">© 2026 هُدى. جميع الحقوق محفوظة.</small></footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/account.js"></script>
+</body>
+</html>
