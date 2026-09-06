@@ -2,12 +2,72 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#087c62">
+  <meta name="theme-color" content="#1f2227">
   <title>حسابي | هُدى</title>
   <link rel="icon" type="image/png" href="../assets/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* صفحة الحساب - تصميم قريب من المرجع، مع الحفاظ على وظائف المشروع الأصلية */
+    .account-page.account-redesign { width:min(1240px,92%); max-width:none; padding-top:42px; }
+    .account-redesign .page-intro { margin-bottom:26px; }
+    .account-redesign .page-intro h1 { font-size:1.65rem; }
+    .account-redesign .page-intro > p:not(.eyebrow) { display:none; }
+    .account-redesign .eyebrow { color:var(--muted); font-size:1.05rem; margin:0; }
+    .account-profile { display:grid; grid-template-columns:280px 1fr; gap:42px; align-items:start; margin-bottom:28px; }
+    .profile-photo-area { display:grid; justify-items:start; gap:12px; }
+    .profile-photo { width:86px; height:86px; border-radius:50%; object-fit:cover; background:#122c3d; border:1px solid rgba(255,255,255,.08); box-shadow:0 8px 25px rgba(0,0,0,.18); }
+    .profile-photo-fallback { display:grid; place-items:center; width:86px; height:86px; border-radius:50%; color:#fff; background:linear-gradient(145deg,#0d3348,#10202d); font-weight:800; font-size:1.2rem; }
+    .profile-photo-title { font-weight:800; margin-top:2px; }
+    .profile-photo-help { color:var(--muted); font-size:.78rem; margin-top:-9px; }
+    .profile-photo-actions { display:flex; align-items:center; gap:12px; }
+    .profile-photo-actions label,.profile-photo-remove { cursor:pointer; color:var(--ink); font-weight:800; font-size:.85rem; }
+    .profile-photo-actions label { padding:8px 13px; border-radius:9px; background:var(--surface); border:1px solid var(--line); }
+    .profile-photo-remove { background:transparent; border:0; padding:7px 0; }
+    .profile-photo-actions input { display:none; }
+    .profile-info-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px 16px; }
+    .profile-field { display:grid; gap:7px; }
+    .profile-field.full { grid-column:1/-1; }
+    .profile-field > span { font-weight:800; font-size:.92rem; }
+    .profile-field .display-value { min-height:48px; display:flex; align-items:center; padding:10px 14px; border:1px solid var(--line); border-radius:7px; background:var(--surface); }
+    .profile-field .display-value.readonly { background:rgba(120,130,140,.09); }
+    .profile-field input { min-height:48px; border-radius:7px; }
+    .profile-save-row { display:flex; justify-content:flex-start; margin-top:10px; }
+    .profile-save-row .button { min-width:98px; }
+    .account-redesign .account-card { display:none; }
+    .account-redesign .account-settings-grid { display:block; margin-top:0; }
+    .account-redesign .account-settings-card { background:transparent; border:0; box-shadow:none; padding:0; margin:0 0 30px; border-radius:0; }
+    .account-redesign .account-settings-card > div:first-child { margin-bottom:12px; }
+    .account-redesign .account-settings-card h2 { font-size:1.3rem; margin:0 0 3px; }
+    .account-redesign .account-settings-card p { color:var(--muted); font-size:.9rem; }
+    .account-redesign .account-settings-card:not(:nth-child(-n+2)) { padding-top:18px; border-top:1px solid var(--line); }
+    .account-redesign .account-settings-card:nth-child(2) .account-form { max-width:610px; }
+    .account-redesign .account-settings-card:nth-child(3), .account-redesign .danger-card { display:none; }
+    .notification-settings { padding-top:8px; border-top:1px solid var(--line); margin-top:8px; }
+    .notification-settings h2 { margin:0 0 18px; font-size:1.25rem; }
+    .notice-row { display:flex; flex-direction:row-reverse; align-items:flex-start; justify-content:flex-start; gap:12px; margin:0 0 16px; cursor:pointer; }
+    .notice-row input { width:24px; height:24px; min-width:24px; accent-color:#2aafc0; margin:1px 0 0; }
+    .notice-row span { color:var(--ink); font-size:.9rem; line-height:1.8; }
+    .notice-row.disabled span { color:#555b61; }
+    .notice-save { display:flex; justify-content:flex-start; margin-top:8px; }
+    .account-redesign .account-actions-card { margin-top:30px; padding:18px 0 0; background:transparent; border:0; border-top:1px solid var(--line); border-radius:0; box-shadow:none; }
+    .account-redesign .account-actions-card .button-secondary { display:none; }
+    .account-redesign .account-logout-button { margin-top:0; color:#b64a4a; background:transparent; border:0; padding-inline:0; }
+    .account-redesign .account-logout-button:hover { background:transparent; }
+    .account-redesign .form-message { min-height:20px; }
+    @media (max-width:800px) {
+      .account-profile { grid-template-columns:1fr; gap:24px; }
+      .profile-photo-area { justify-items:start; }
+      .profile-info-grid { grid-template-columns:1fr; }
+      .profile-field.full { grid-column:auto; }
+    }
+    @media (max-width:560px) {
+      .account-page.account-redesign { width:92%; padding-top:30px; }
+      .profile-photo-actions { flex-wrap:wrap; }
+      .account-redesign .page-intro h1 { font-size:1.45rem; }
+    }
+  </style>
 </head>
 <body class="app-shell">
   <header class="site-header">
@@ -24,86 +84,70 @@
     </div>
   </header>
 
-  <main class="section-wrap page-main account-page">
+  <main class="section-wrap page-main account-page account-redesign">
     <div class="page-intro">
-      <p class="eyebrow">مساحتك الشخصية</p>
+      <p class="eyebrow">التخصيص</p>
       <h1>حسابي</h1>
-      <p>إدارة بيانات حسابك، مع أدوات واضحة لتعديلها وحماية حسابك.</p>
     </div>
 
-    <section id="account-card" class="account-card" hidden aria-live="polite">
-      <div class="account-avatar" aria-hidden="true">ه</div>
-      <div class="account-details">
-        <span class="card-label">المستخدم</span>
-        <h2 id="account-name">—</h2>
-        <p id="account-email">—</p>
+    <section class="account-profile" aria-label="الملف الشخصي">
+      <div class="profile-photo-area">
+        <div id="profile-photo-wrap">
+          <img id="profile-photo" class="profile-photo" src="../assets/rayan-avatar.jpg" alt="صورة الملف الشخصي">
+        </div>
+        <div class="profile-photo-title">صورة الملف الشخصي</div>
+        <div class="profile-photo-help">الحد الأقصى 5 MB<br>JPEG, JPG, PNG فقط</div>
+        <div class="profile-photo-actions">
+          <label for="profile-photo-input">تحميل صورة<input id="profile-photo-input" type="file" accept="image/jpeg,image/jpg,image/png"></label>
+          <button type="button" id="profile-photo-remove" class="profile-photo-remove">إزالة الصورة</button>
+        </div>
       </div>
+
+      <div class="profile-info">
+        <div class="profile-info-grid">
+          <div class="profile-field">
+            <span>البريد الإلكتروني</span>
+            <div id="profile-email-value" class="display-value readonly" dir="ltr">—</div>
+          </div>
+          <div class="profile-field">
+            <span>اسم المستخدم</span>
+            <div id="profile-username-value" class="display-value readonly" dir="ltr">—</div>
+          </div>
+          <div class="profile-field full">
+            <span>الاسم الكامل</span>
+            <input id="new-name" name="name" type="text" minlength="2" maxlength="50" autocomplete="name" required>
+            <p id="name-limit-message" class="form-message" role="status" aria-live="polite"></p>
+            <div class="profile-save-row">
+              <button id="profile-save-name" class="button button-primary" type="button">حفظ التغييرات</button>
+            </div>
+            <p id="name-message" class="form-message" role="alert" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="notification-settings" aria-labelledby="notification-title">
+      <h2 id="notification-title">إعدادات إشعارات البريد الإلكتروني</h2>
+      <label class="notice-row"><input id="notify-progress" type="checkbox"><span><strong>إنجازاتك:</strong> سيتم إرسال بريد إلكتروني لإعلامك بأن سلسلة إنجازاتك اليومية على وشك الانقطاع.</span></label>
+      <label class="notice-row"><input id="notify-quran" type="checkbox"><span><strong>القرآن في عام:</strong> سيتم إرسال بريد إلكتروني يحتوي على روابط لمهمة القراءة الأسبوعية، وأسئلة التدبر والمزيد من الموارد لمساعدتك على البقاء على المسار الصحيح.</span></label>
+      <label class="notice-row disabled"><input id="notify-ramadan" type="checkbox" disabled><span><strong>تحدي رمضان اليومي:</strong> سورة المائدة: تحدي الحفظ بتدبر.</span></label>
+      <label class="notice-row"><input id="notify-reminder" type="checkbox"><span><strong>تذكير بالهدف:</strong> سيتم إرسال رسالة عبر البريد الإلكتروني لتذكيرك بهدفك في القرآن إذا لم تحرز تقدمًا منذ فترة.</span></label>
+      <div class="notice-save"><button type="button" id="save-notifications" class="button button-primary">حفظ الإشعارات</button></div>
+      <p id="notification-message" class="form-message" role="status" aria-live="polite"></p>
     </section>
 
     <section class="account-settings-grid">
       <article class="account-settings-card">
-        <div>
-          <span class="card-label">الاسم</span>
-          <h2>تعديل الاسم</h2>
-          <p id="name-limit-message">جارٍ تحميل عدد مرات التغيير المتاحة...</p>
-        </div>
-        <form id="name-form" class="account-form" novalidate>
-          <label>الاسم الجديد
-            <input id="new-name" name="name" type="text" minlength="2" maxlength="50" autocomplete="name" required>
-          </label>
-          <p id="name-message" class="form-message" role="alert" aria-live="polite"></p>
-          <button class="button button-primary" type="submit">حفظ الاسم</button>
-        </form>
-      </article>
-
-      <article class="account-settings-card">
-        <div>
-          <span class="card-label">البريد الإلكتروني</span>
-          <h2>تعديل البريد</h2>
-          <p>للحماية، يجب تأكيد كلمة السر الحالية عند تغيير البريد.</p>
-        </div>
+        <div><span class="card-label">البريد الإلكتروني</span><h2>تعديل البريد</h2><p>للحماية، يجب تأكيد كلمة السر الحالية عند تغيير البريد.</p></div>
         <form id="email-form" class="account-form" novalidate>
-          <label>البريد الجديد
-            <input id="new-email" name="email" type="email" autocomplete="email" required>
-          </label>
-          <label>كلمة السر الحالية
-            <input name="currentPassword" type="password" autocomplete="current-password" required>
-          </label>
+          <label>البريد الجديد<input id="new-email" name="email" type="email" autocomplete="email" required></label>
+          <label>كلمة السر الحالية<input name="currentPassword" type="password" autocomplete="current-password" required></label>
           <p id="email-message" class="form-message" role="alert" aria-live="polite"></p>
           <button class="button button-primary" type="submit">حفظ البريد</button>
         </form>
       </article>
-
-      <article class="account-settings-card">
-        <div>
-          <span class="card-label">كلمة السر</span>
-          <h2>تغيير كلمة السر</h2>
-          <p>أدخل كلمة السر الحالية والجديدة مباشرة، بدون الحاجة لرمز عبر البريد الإلكتروني.</p>
-        </div>
-        <form id="password-form" class="account-form" novalidate>
-          <label>كلمة السر الحالية
-            <input name="currentPassword" type="password" autocomplete="current-password" required>
-          </label>
-          <label>كلمة السر الجديدة
-            <input name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
-          </label>
-          <label>تأكيد كلمة السر الجديدة
-            <input name="confirmNewPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
-          </label>
-          <p id="password-message" class="form-message" role="alert" aria-live="polite"></p>
-          <button class="button button-primary" type="submit">حفظ كلمة السر</button>
-        </form>
-        <p class="auth-switch"><a href="forgot-password.html">نسيت كلمة السر الحالية؟</a></p>
-      </article>
-
-      <article class="account-settings-card danger-card">
-        <div>
-          <span class="card-label">منطقة الخطر</span>
-          <h2>حذف الحساب</h2>
-          <p>حذف الحساب نهائي، وستُحذف بيانات الحفظ والإحصائيات المرتبطة به.</p>
-        </div>
-        <button type="button" id="open-delete" class="button danger-button">حذف الحساب</button>
-      </article>
+      <article class="account-settings-card"><div><span class="card-label">كلمة السر</span><h2>تغيير كلمة السر</h2><p>أدخل كلمة السر الحالية والجديدة مباشرة.</p></div><form id="password-form" class="account-form" novalidate><label>كلمة السر الحالية<input name="currentPassword" type="password" autocomplete="current-password" required></label><label>كلمة السر الجديدة<input name="newPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></label><label>تأكيد كلمة السر الجديدة<input name="confirmNewPassword" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></label><p id="password-message" class="form-message" role="alert" aria-live="polite"></p><button class="button button-primary" type="submit">حفظ كلمة السر</button></form></article>
+      <article class="account-settings-card danger-card"><div><span class="card-label">منطقة الخطر</span><h2>حذف الحساب</h2></div><button type="button" id="open-delete" class="button danger-button">حذف الحساب</button></article>
     </section>
 
     <section class="account-actions-card">
@@ -114,33 +158,9 @@
   </main>
 
   <div id="delete-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="delete-title" hidden>
-    <div class="modal-backdrop" data-close-delete></div>
-    <article class="modal-content">
-      <button class="modal-close" data-close-delete aria-label="إغلاق">×</button>
-      <p class="eyebrow">حذف الحساب</p>
-      <h2 id="delete-title">تأكيد الحذف النهائي</h2>
-      <p>أدخل كلمة السر الحالية لتأكيد حذف الحساب. لا يوجد خيار «نسيت كلمة السر» في هذه العملية.</p>
-      <form id="delete-form" class="account-form" novalidate>
-        <label>كلمة السر
-          <input name="password" type="password" autocomplete="current-password" required>
-        </label>
-        <label>اكتب «حذف حسابي» للتأكيد
-          <input name="confirmation" type="text" autocomplete="off" required>
-        </label>
-        <p id="delete-message" class="form-message" role="alert" aria-live="polite"></p>
-        <div class="modal-actions">
-          <button type="button" class="button button-secondary" data-close-delete>إلغاء</button>
-          <button type="submit" class="button danger-button">حذف نهائي</button>
-        </div>
-      </form>
-    </article>
-  </div>
+    <div class="modal-backdrop" data-close-delete></div><article class="modal-content"><button class="modal-close" data-close-delete aria-label="إغلاق">×</button><p class="eyebrow">حذف الحساب</p><h2 id="delete-title">تأكيد الحذف النهائي</h2><p>أدخل كلمة السر الحالية لتأكيد حذف الحساب.</p><form id="delete-form" class="account-form" novalidate><label>كلمة السر<input name="password" type="password" autocomplete="current-password" required></label><label>اكتب «حذف حسابي» للتأكيد<input name="confirmation" type="text" autocomplete="off" required></label><p id="delete-message" class="form-message" role="alert" aria-live="polite"></p><div class="modal-actions"><button type="button" class="button button-secondary" data-close-delete>إلغاء</button><button type="submit" class="button danger-button">حذف نهائي</button></div></form></article></div>
 
   <footer class="site-footer">رفيقك اليومي في طريق الخير <span>✦</span><small class="footer-copyright">© 2026 هُدى. جميع الحقوق محفوظة.</small></footer>
-
-  <script src="../js/config.js"></script>
-  <script src="../js/utils.js"></script>
-  <script src="../js/app.js"></script>
-  <script src="../js/account.js"></script>
+  <script src="../js/config.js"></script><script src="../js/utils.js"></script><script src="../js/app.js"></script><script src="../js/account.js"></script>
 </body>
 </html>

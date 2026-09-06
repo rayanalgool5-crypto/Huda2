@@ -4,9 +4,7 @@
  */
 
 
-
 const PRODUCTION_API_BASE_URL = 'https://huda-backend-70x4.onrender.com/api';
-
 
 const isLocalDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const resolvedApiBaseUrl = isLocalDev ? '/api' : PRODUCTION_API_BASE_URL;
