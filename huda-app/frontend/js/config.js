@@ -3,13 +3,11 @@
  * These values are used across the application
  */
 
-// ⚠️ عند رفع الباك اند لمنصة استضافة (Render مثلاً)، غيّر السطر تحت مباشرة
-// إلى رابط الباك اند الحقيقي مع لاحقة /api — مثال:
-// const PRODUCTION_API_BASE_URL = 'https://huda-backend.onrender.com/api';
-const PRODUCTION_API_BASE_URL = 'https://REPLACE-WITH-YOUR-BACKEND-URL.onrender.com/api';
 
-// محلياً (localhost) نستخدم مسار نسبي /api لأن الباك اند بيشغّل الفرونت اند معه على نفس البورت.
-// بأي دومين ثاني (يعني بعد النشر على Netlify) نستخدم رابط الباك اند الكامل من فوق.
+
+const PRODUCTION_API_BASE_URL = 'https://huda-backend-70x4.onrender.com/api';
+
+
 const isLocalDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 const resolvedApiBaseUrl = isLocalDev ? '/api' : PRODUCTION_API_BASE_URL;
 
