@@ -1,11 +1,7 @@
 (() => {
-  const card = document.getElementById('account-card');
-  const name = document.getElementById('account-name');
-  const email = document.getElementById('account-email');
   const nameForm = document.getElementById('name-form');
   const profileSaveName = document.getElementById('profile-save-name');
   const profileEmailValue = document.getElementById('profile-email-value');
-  const profileUsernameValue = document.getElementById('profile-username-value');
   const profilePhoto = document.getElementById('profile-photo');
   const profilePhotoInput = document.getElementById('profile-photo-input');
   const profilePhotoRemove = document.getElementById('profile-photo-remove');
@@ -33,13 +29,9 @@
 
   function setUser(user) {
     currentUser = user;
-    name.textContent = user.name || 'مستخدم هُدى';
-    email.textContent = user.email || '';
     if (profileEmailValue) profileEmailValue.textContent = user.email || '—';
-    if (profileUsernameValue) profileUsernameValue.textContent = user.username || user.name || '—';
     document.getElementById('new-name').value = user.name || '';
     document.getElementById('new-email').value = user.email || '';
-    card.hidden = false;
     loadPreferences();
     const savedPhoto = localStorage.getItem('huda_profile_photo');
     if (profilePhoto && savedPhoto) profilePhoto.src = savedPhoto;
@@ -143,6 +135,34 @@
     if (notificationMessage) { notificationMessage.textContent = 'تم حفظ إعدادات الإشعارات.'; setTimeout(() => { notificationMessage.textContent = ''; }, 2500); }
   });
 
+  const changeEmailModal = document.getElementById('change-email-modal');
+  const openChangeEmail = document.getElementById('open-change-email');
+
+  function openChangeEmailModal() {
+    if (!changeEmailModal) return;
+    emailForm?.reset();
+    if (emailMessage) emailMessage.textContent = '';
+    changeEmailModal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    emailForm?.currentPassword?.focus();
+  }
+
+  function closeChangeEmailModal() {
+    if (!changeEmailModal) return;
+    changeEmailModal.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  openChangeEmail?.addEventListener('click', openChangeEmailModal);
+
+  changeEmailModal?.addEventListener('click', (event) => {
+    if (event.target.closest('[data-close-change-email]')) closeChangeEmailModal();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && changeEmailModal && !changeEmailModal.hidden) closeChangeEmailModal();
+  });
+
   emailForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
     const button = emailForm.querySelector('button[type="submit"]');
@@ -160,10 +180,10 @@
         currentPassword: emailForm.currentPassword.value,
       });
       setUser(data.user);
-      emailForm.currentPassword.value = '';
       emailMessage.textContent = 'تم تحديث البريد الإلكتروني بنجاح.';
       HudaUtils.storage.set(CONFIG.STORAGE.USER_KEY, data.user);
       await Huda.refreshSession();
+      setTimeout(closeChangeEmailModal, 900);
     } catch (error) {
       emailMessage.textContent = error.message || 'تعذّر تعديل البريد الإلكتروني.';
     } finally {

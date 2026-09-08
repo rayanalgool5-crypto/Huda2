@@ -363,3 +363,67 @@ body.dark { --ink:#e9f4ef; --muted:#a4b7af; --page:#10211c; --surface:#172c25; -
 .contact-channel .channel-name { margin:0; font-size:1.05rem; font-weight:800; }
 .contact-channel .channel-hint { margin:2px 0 0; color:var(--muted); font-size:.8rem; }
 .contact-note { max-width:520px; margin:30px auto 0; padding:18px 22px; color:var(--muted); text-align:center; background:var(--page); border:1px dashed var(--line); border-radius:14px; font-size:.86rem; line-height:1.9; }
+
+/* ===== منهجية الحفظ الجديدة (سبع مراحل): مؤشر المراحل + صفحة المصحف الحقيقية + التحكم لكل مرحلة ===== */
+.mem-stage-steps { display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none; }
+.mem-stage-step { padding:7px 13px; color:var(--muted); background:var(--surface); border:1px solid var(--line); border-radius:999px; font-size:.78rem; font-weight:700; transition:.2s; }
+.mem-stage-step.done { color:var(--emerald-dark); background:var(--emerald-pale); border-color:transparent; }
+.mem-stage-step.active { color:#fff; background:var(--emerald); border-color:transparent; box-shadow:0 6px 16px rgba(8,124,98,.25); }
+.mem-stage-step.mem-stage-final { color:#fff; background:linear-gradient(120deg,var(--gold),#a9791f); font-size:.86rem; padding:9px 16px; }
+.mem-stage-step.mem-stage-link { color:#fff; background:linear-gradient(120deg,var(--emerald),#0b9776); font-size:.86rem; padding:9px 16px; }
+
+.mem-page-card { padding:28px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+.mem-page-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; margin-bottom:16px; }
+.mem-page-tag { color:var(--muted); font-size:.76rem; }
+.mem-mushaf-content { --mushaf-font-size:24px; min-height:220px; font-family:"Amiri Quran",serif; font-size:var(--mushaf-font-size); line-height:2.35; text-align:justify; text-align-last:center; color:var(--ink); }
+.mem-target-wrap { padding:2px 6px; border-radius:10px; box-shadow:inset 0 0 0 2px var(--emerald-pale); }
+
+.mem-word { display:inline-block; margin:0 2px; padding:1px 5px; border-radius:6px; transition:.15s; }
+.mem-word-correct { color:var(--emerald-dark); background:var(--emerald-pale); }
+.mem-word-wrong { color:#a43232; background:#fbe3e3; }
+.mem-word-current { box-shadow:inset 0 -3px 0 var(--gold); }
+.mem-word-hinted { text-decoration:underline dotted; text-underline-offset:6px; }
+.mem-blank-page .mem-word:not(.revealed) { color:transparent; text-shadow:0 0 9px rgba(21,33,30,.45); background:var(--page); }
+.dark .mem-blank-page .mem-word:not(.revealed) { text-shadow:0 0 9px rgba(233,244,239,.35); }
+
+.mem-blank-word { display:inline-block; width:calc(var(--len,4) * .62em); height:1.05em; margin:0 3px; vertical-align:middle; background:var(--page); border-bottom:2px dashed var(--line); border-radius:3px; }
+.mem-line-done { display:inline-flex; align-items:center; margin:0 4px; padding:3px 10px; color:var(--emerald-dark); background:var(--emerald-pale); border-radius:999px; font-family:"Tajawal",sans-serif; font-size:.72rem; font-weight:800; vertical-align:middle; }
+
+.memorize-feedback { min-height:22px; margin:18px 0 0; padding:10px 14px; color:var(--muted); background:var(--page); border:1px solid var(--line); border-radius:10px; font-size:.85rem; text-align:center; }
+.memorize-feedback[data-tone="success"] { color:var(--emerald-dark); background:var(--emerald-pale); border-color:transparent; }
+.memorize-feedback[data-tone="error"] { color:#a43232; background:#fbe3e3; border-color:transparent; }
+.mem-errors { display:grid; gap:6px; margin:12px 0 0; padding:0; list-style:none; }
+.mem-error { padding:7px 11px; border-radius:10px; font-size:.88rem; font-weight:700; }
+.mem-error-missing { color:#8a5300; background:#fdf1dc; }
+.mem-error-extra { color:#7a3030; background:#fbe6e6; }
+.mem-error-substituted { color:#6a3487; background:#f2e7fa; }
+
+.memorize-controls { display:flex; flex-direction:column; align-items:stretch; gap:16px; padding:24px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); }
+.mem-stage-controls { display:flex; flex-direction:column; align-items:center; gap:14px; }
+.mem-controls-row { display:flex; flex-wrap:wrap; justify-content:center; gap:9px; width:100%; }
+.mem-controls-row .button { min-height:42px; font-size:.85rem; padding:9px 14px; }
+
+.mem-repeat-box { display:flex; flex-direction:column; align-items:center; gap:10px; }
+.mem-repeat-dial { display:grid; place-items:center; width:96px; height:96px; color:var(--emerald-dark); background:var(--emerald-pale); border-radius:50%; font-size:1.35rem; font-weight:800; font-variant-numeric:tabular-nums; }
+.mem-repeat-dots { display:flex; flex-wrap:wrap; justify-content:center; gap:6px; max-width:220px; }
+.mem-repeat-dot { width:11px; height:11px; background:var(--line); border-radius:50%; }
+.mem-repeat-dot.filled { background:var(--emerald); }
+
+.mem-surahtest-banner { margin:0; padding:9px 14px; color:var(--gold); background:#fbf3e2; border-radius:10px; font-size:.82rem; font-weight:800; text-align:center; }
+.mem-surahtest-banner.mem-link-banner { color:var(--emerald-dark); background:var(--emerald-pale); }
+.mem-test-mic-row { justify-content:center; }
+.memorize-typed { display:flex; flex-wrap:wrap; gap:9px; width:100%; }
+.memorize-typed input { flex:1 1 220px; min-height:46px; padding:10px 14px; background:var(--surface); border:1px solid var(--line); border-radius:12px; }
+.memorize-compare { width:100%; padding:14px; background:var(--emerald-pale); border-radius:14px; }
+.memorize-compare-note { margin:0 0 10px; color:var(--muted); font-size:.85rem; }
+.memorize-compare-actions { display:flex; flex-wrap:wrap; gap:9px; }
+
+.mem-celebrate { animation:mem-pop .9s ease; }
+@keyframes mem-pop { 0%,100% { transform:none; } 35% { transform:scale(1.01); } }
+.surah-memorized-badge { grid-column:1/-1; justify-self:start; padding:2px 9px; color:var(--emerald-dark); background:var(--emerald-pale); border-radius:999px; font-size:.72rem; font-weight:800; }
+.surah-memorized-badge.partial { color:var(--gold); background:#fbf3e2; }
+.surah-item.memorized strong::after { content:" ✓"; color:var(--emerald); }
+
+.memorize-panel { display:grid; grid-template-columns:1fr 320px; gap:20px; align-items:start; }
+@media (max-width:860px) { .memorize-panel { grid-template-columns:1fr; } }
+@media (max-width:560px) { .mem-mushaf-content { --mushaf-font-size:19px!important; line-height:2.15; } .mem-repeat-dial { width:82px; height:82px; font-size:1.15rem; } }

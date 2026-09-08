@@ -106,7 +106,7 @@
       </div>
     </section>
 
-    <section class="quran-workspace memorize-workspace" id="tab-memorize" data-tab-panel="memorize" role="tabpanel" aria-labelledby="tab-btn-memorize" hidden aria-label="اختبار الحفظ عبر المايك">
+    <section class="quran-workspace memorize-workspace" id="tab-memorize" data-tab-panel="memorize" role="tabpanel" aria-labelledby="tab-btn-memorize" hidden aria-label="منهجية الحفظ الكاملة: قراءة، استماع، تكرار، تسميع">
       <section id="mem-auth-gate" class="auth-gate" hidden>
         <h2>سجّل دخولك لبدء الحفظ</h2>
         <p>تتبع الحفظ والتصحيح والإحصائيات محفوظ في حسابك مباشرة حتى لا يضيع تقدّمك.</p>
@@ -117,45 +117,37 @@
       <div id="mem-workspace" hidden>
         <div class="quran-toolbar">
           <label class="toolbar-field"><span>السورة</span><select id="mem-surah-select" aria-label="اختيار سورة للحفظ"><option>جاري تحميل السور…</option></select></label>
-          <label class="repeat-toggle"><input id="mem-hide-text" type="checkbox"><span>إخفاء النص (اختبار حقيقي)</span></label>
+          <label class="toolbar-field"><span>شدّة التكرار</span>
+            <select id="mem-repeat-intensity" aria-label="عدد مرات تكرار كل آية قبل التسميع">
+              <option value="5">خفيف — ٥ مرات</option>
+              <option value="7" selected>متوسط — ٧ مرات</option>
+              <option value="10">مكثّف — ١٠ مرات</option>
+            </select>
+          </label>
           <button type="button" id="mem-quick-review" class="button button-secondary">مراجعة سريعة</button>
           <div id="mem-progress" class="reading-progress" role="status" aria-live="polite" aria-label="تقدم حفظ السورة" style="--progress: 0"><strong id="mem-progress-value">٠٪</strong><small>إتقان السورة</small></div>
           <span id="mem-accuracy" class="mem-accuracy">نسبة الإتقان: —</span>
         </div>
 
         <p id="mem-review-banner" class="completion-status" hidden></p>
-        <p id="mem-support-warning" class="completion-status mem-warning" hidden>متصفحك الحالي لا يدعم التعرف على الصوت. يمكنك التسميع كتابةً، أو استخدم Chrome لاستعمال المايك.</p>
+        <p id="mem-support-warning" class="completion-status mem-warning" hidden>متصفحك الحالي لا يدعم التعرف على الصوت. يمكنك التسميع كتابةً بدل المايك.</p>
+
+        <ol id="mem-stage-steps" class="mem-stage-steps" aria-label="مراحل حفظ الآية الحالية"></ol>
 
         <div class="memorize-panel">
-          <div class="memorize-verse-card">
-            <div class="memorize-verse-meta">
-              <span id="mem-surah-title" class="card-label">اختر سورة لبدء التسميع</span>
+          <article id="mem-page-card" class="mem-page-card">
+            <header class="mem-page-head">
+              <span id="mem-page-surah-title" class="card-label">اختر سورة لبدء الحفظ</span>
+              <span id="mem-page-label" class="mem-page-tag"></span>
               <span id="mem-verse-counter">— / —</span>
-            </div>
-            <p id="mem-verse-text" class="memorize-verse-text">اختر سورة من القائمة، ثم اقرأ بالمايك أو اكتب الآية كلمة كلمة.</p>
+            </header>
+            <div id="mem-mushaf-content" class="mushaf-content mem-mushaf-content">اختر سورة من القائمة — ستظهر صفحتها من المصحف هنا، وتمر كل آية بمراحل الحفظ الست قبل الانتقال للتي بعدها.</div>
             <p id="mem-feedback" class="memorize-feedback" aria-live="polite"></p>
             <ul id="mem-errors" class="mem-errors" aria-live="polite" hidden></ul>
-          </div>
+          </article>
 
           <div class="memorize-controls">
-            <button type="button" id="mem-mic-button" class="mic-button" aria-pressed="false" aria-label="بدء التسميع">
-              <span class="mic-icon" aria-hidden="true">🎙</span>
-              <span id="mem-mic-label">ابدأ التسميع</span>
-            </button>
-
-            <div class="memorize-typed">
-              <label class="sr-only" for="mem-typed-input">اكتب الكلمة أو الآية</label>
-              <input id="mem-typed-input" type="text" placeholder="اكتب الكلمة التالية…" autocomplete="off" disabled>
-              <button type="button" id="mem-typed-submit" class="button button-primary" disabled>تحقّق</button>
-              <button type="button" id="mem-hint" class="button button-secondary" disabled>تلميح (الحرف الأول)</button>
-            </div>
-
-            <div class="memorize-secondary-controls">
-              <button type="button" id="mem-listen-correct" class="button button-secondary" disabled>استمع للنطق الصحيح</button>
-              <button type="button" id="mem-repeat-verse" class="button button-secondary" disabled>إعادة الآية</button>
-              <button type="button" id="mem-next-verse" class="button button-secondary" disabled title="أتقن الآية الحالية 100% أولاً">الآية التالية</button>
-              <button type="button" id="mem-record" class="button button-secondary" disabled>🎙 سجّل وقارن</button>
-            </div>
+            <div id="mem-stage-controls" class="mem-stage-controls"></div>
 
             <div id="mem-compare" class="memorize-compare" hidden>
               <p class="memorize-compare-note">تسجيلك محفوظ على جهازك فقط ويُحذف تلقائياً بعد المقارنة أو عند مغادرة الشاشة.</p>
@@ -169,6 +161,7 @@
         </div>
       </div>
       <audio id="mem-audio" preload="none"></audio>
+      <audio id="mem-word-audio" preload="none"></audio>
       <audio id="mem-user-audio" preload="none"></audio>
     </section>
   </main>
