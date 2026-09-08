@@ -427,3 +427,27 @@ body.dark { --ink:#e9f4ef; --muted:#a4b7af; --page:#10211c; --surface:#172c25; -
 .memorize-panel { display:grid; grid-template-columns:1fr 320px; gap:20px; align-items:start; }
 @media (max-width:860px) { .memorize-panel { grid-template-columns:1fr; } }
 @media (max-width:560px) { .mem-mushaf-content { --mushaf-font-size:19px!important; line-height:2.15; } .mem-repeat-dial { width:82px; height:82px; font-size:1.15rem; } }
+
+/* ===== صفحة تنزيل التطبيق ===== */
+.download-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px; margin-top:8px; }
+.download-card { padding:30px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 4px 15px rgba(20,69,55,.025); transition:transform .2s,box-shadow .2s; }
+.download-card:hover { transform:translateY(-4px); box-shadow:var(--shadow); }
+.download-card-icon { display:grid; place-items:center; width:52px; height:52px; margin-bottom:16px; color:var(--emerald); background:var(--emerald-pale); border-radius:16px; font-size:1.6rem; }
+.download-card h2 { margin:0 0 8px; font-size:1.28rem; }
+.download-card > p:not(.download-hint) { margin:0 0 20px; color:var(--muted); font-size:.95rem; }
+.download-card .button-wide { margin-bottom:14px; }
+.download-hint { margin:0; padding:12px 14px; color:var(--muted); background:var(--page); border:1px solid var(--line); border-radius:12px; font-size:.82rem; line-height:1.8; }
+.download-hint strong { color:var(--ink); }
+
+/* ===== دليل خطوات التثبيت (صور + شرح) ===== */
+.install-guide { margin-top:36px; padding:32px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); }
+.install-guide h2 { margin:0 0 10px; font-size:1.3rem; }
+.install-guide-note { margin:0 0 28px; padding:14px 16px; color:var(--muted); background:var(--page); border:1px solid var(--line); border-radius:12px; font-size:.9rem; line-height:1.85; }
+.install-guide-note strong { color:var(--ink); }
+.install-step { display:grid; grid-template-columns:auto 200px 1fr; align-items:center; gap:22px; padding:22px 0; border-top:1px dashed var(--line); }
+.install-step:first-of-type { border-top:0; padding-top:0; }
+.install-step-number { display:grid; place-items:center; width:36px; height:36px; color:#fff; background:var(--emerald); border-radius:50%; font-weight:800; font-size:1rem; }
+.install-step img { width:100%; border-radius:14px; border:1px solid var(--line); box-shadow:0 4px 15px rgba(20,69,55,.06); }
+.install-step p { margin:0; color:var(--ink); font-size:.95rem; line-height:1.85; }
+.install-step p strong { color:var(--emerald); }
+@media (max-width:760px) { .install-step { grid-template-columns:36px 1fr; grid-template-areas:"num img" "text text"; } .install-step-number { grid-area:num; } .install-step img { grid-area:img; max-width:220px; margin-inline-start:auto; } .install-step p { grid-area:text; } }
