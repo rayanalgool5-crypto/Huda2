@@ -1,0 +1,19 @@
+# أسرار البيئة — لا يجب رفعها إلى GitHub أبداً (باسورد الجلسة، مفاتيح Infobip، مفاتيح VAPID...)
+.env
+backend/.env
+backend/evn/
+
+# قاعدة البيانات المحلية
+backend/data/*.db
+backend/data/*.db-journal
+backend/data/*.db-wal
+backend/data/*.db-shm
+
+# اعتماديات Node
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# ملفات نظام
+.DS_Store
+Thumbs.db
