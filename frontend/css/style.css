@@ -636,3 +636,43 @@ body.dark { --ink:#e9f4ef; --muted:#a4b7af; --page:#10211c; --surface:#172c25; -
 @media (prefers-reduced-motion:reduce) {
   .huda-idle-card,.huda-idle-opening { animation:none; }
 }
+
+/* =========================================================
+   حقوق النشر والملكية الفكرية — Footer الاحترافي وصفحة الحقوق
+   (إضافة لا تُعدّل أي تنسيق سابق في الملف)
+   ========================================================= */
+.site-footer--pro { padding:42px 22px 24px; text-align:start; }
+.footer-top { display:flex; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; gap:26px 32px; width:min(1160px,90%); margin-inline:auto; padding-bottom:24px; border-bottom:1px solid var(--line); text-align:right; }
+.footer-brand { display:flex; align-items:flex-start; gap:12px; max-width:340px; flex:1 1 260px; }
+.footer-brand img { flex:0 0 auto; width:40px; height:40px; border-radius:11px; }
+.footer-brand strong { display:block; color:var(--ink); font-size:1.05rem; }
+.footer-brand p { margin:6px 0 0; color:var(--muted); font-size:.85rem; line-height:1.8; }
+.footer-links { display:flex; flex-wrap:wrap; align-content:flex-start; gap:8px 20px; flex:1 1 220px; }
+.footer-links a { color:var(--muted); font-size:.88rem; font-weight:700; white-space:nowrap; }
+.footer-links a:hover { color:var(--emerald); }
+.site-footer--pro .footer-social { margin-top:0; flex:0 0 auto; }
+.footer-bottom { width:min(1160px,90%); margin-inline:auto; padding-top:16px; text-align:center; }
+.footer-bottom .footer-copyright { display:block; margin:0; color:var(--muted); font-size:.8rem; opacity:.85; }
+.footer-legal-link { display:inline-block; margin-top:8px; color:var(--muted); font-size:.78rem; text-decoration:underline; text-underline-offset:3px; }
+.footer-legal-link:hover { color:var(--emerald); }
+@media (max-width:700px) {
+  .footer-top { flex-direction:column; align-items:center; text-align:center; }
+  .footer-brand { flex-direction:column; align-items:center; max-width:none; text-align:center; }
+  .footer-links { justify-content:center; text-align:center; }
+}
+
+/* صفحة حقوق النشر والملكية الفكرية */
+.copyright-page .legal-card { padding:26px 28px; margin-bottom:18px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:0 4px 15px rgba(20,69,55,.025); }
+.copyright-page .legal-card h2 { margin:0 0 12px; font-size:1.2rem; color:var(--emerald-dark); }
+.copyright-page .legal-card p { margin:0 0 10px; color:var(--muted); font-size:.95rem; line-height:2; }
+.copyright-page .legal-card p:last-child { margin-bottom:0; }
+.copyright-page .legal-card ul { margin:0; padding-inline-start:20px; color:var(--muted); font-size:.95rem; line-height:2; }
+.copyright-page .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+.copyright-page .info-item { padding:16px 18px; background:var(--page); border:1px solid var(--line); border-radius:14px; }
+.copyright-page .info-item span { display:block; margin-bottom:4px; color:var(--muted); font-size:.75rem; }
+.copyright-page .info-item strong { color:var(--ink); font-size:.95rem; word-break:break-word; }
+.copyright-page .copyright-notice { padding:22px; text-align:center; background:var(--emerald-pale); border-radius:var(--radius); color:var(--emerald-dark); font-weight:800; }
+.dark .copyright-page .copyright-notice { background:var(--emerald-pale); }
+@media (max-width:560px) {
+  .copyright-page .legal-card { padding:20px; }
+}
