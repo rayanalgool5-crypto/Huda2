@@ -441,7 +441,6 @@
       const config = await ensureReciter();
       verseTimings = await loadVerseTimings(config);
       const timing = timingForAyah(ayah.numberInSurah);
-      if (!timing) throw new Error('لا يوجد توقيت موثوق لهذه الآية');
 
       currentVerseIndex = index;
       const url = fullSurahAudioUrl(config);
@@ -460,11 +459,16 @@
         });
       }
 
-      elements.audio.currentTime = timing.start / 1000;
+      // بعض القرّاء، ومنهم محمد اللحيدان، لديهم ملفات صوت كاملة في المصدر
+      // لكن المصدر لا ينشر توقيت كل آية لهم. غياب التوقيت لا يعني أن التلاوة
+      // غير متاحة؛ نشغّل السورة من البداية بدلاً من منع التشغيل بالكامل.
+      elements.audio.currentTime = timing ? timing.start / 1000 : 0;
       highlightVerse(index, { scroll: true });
       elements.play.textContent = '❚❚';
       elements.play.setAttribute('aria-label', 'إيقاف مؤقت');
-      setStatus(`تلاوة ${config.name} — اضغط أي آية للانتقال إليها داخل نفس الصوت.`);
+      setStatus(timing
+        ? `تلاوة ${config.name} — اضغط أي آية للانتقال إليها داخل نفس الصوت.`
+        : `تلاوة ${config.name} — هذه التلاوة لا توفر توقيت الآيات، لذا ستبدأ السورة من أولها.`);
       await elements.audio.play();
     } catch (error) {
       console.error('Quran audio error:', error);
@@ -636,6 +640,18 @@
       return;
     }
     if (currentVerseIndex >= 0) markCurrentVerseComplete();
+    // عند عدم توفر التوقيتات يكون الملف المُشغّل هو السورة كاملة، وليس آية
+    // منفردة؛ لذلك لا نُعد تشغيل السورة من البداية لكل آية تالية.
+    if (!timingForAyah(currentVerseIndex >= 0 ? verses[currentVerseIndex]?.numberInSurah : 1)) {
+      elements.play.textContent = '▶';
+      elements.play.setAttribute('aria-label', 'تشغيل');
+      elements.nowPlaying.textContent = `أتممت سورة ${currentSurah.name}`;
+      verses.forEach((ayah) => completedAyahs.add(ayah.numberInSurah));
+      saveCompletion();
+      renderCompletion();
+      renderVerses(elements.verseSearch.value);
+      return;
+    }
     if (currentVerseIndex < verses.length - 1) {
       playVerse(currentVerseIndex + 1);
     } else {
