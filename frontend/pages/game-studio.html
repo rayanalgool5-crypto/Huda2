@@ -18,9 +18,22 @@
   </header>
 
   <main class="section-wrap page-main">
-    <div class="page-intro"><p class="eyebrow">فعاليات هُدى</p><h1>تخمين الآية</h1><p>تُعرض عليك آية من القرآن الكريم، وعليك تخمين اسم السورة التي وردت فيها — العب وحدك أو مع أصدقائك في غرفة جماعية بكود.</p></div>
+    <div class="page-intro"><p class="eyebrow">فعاليات هُدى</p><h1>مساحة اللعب والتحدي</h1><p>اختر فعالية لتبدأ تحدّياً نافعاً مع نفسك أو مع أصدقائك.</p></div>
 
-    <div id="guess-ayah-app" class="guess-ayah-app">
+    <section id="huda-games-hub" class="huda-games-hub" aria-label="ألعاب فعاليات هُدى">
+      <article class="huda-game-card">
+        <span class="huda-game-card-icon" aria-hidden="true">📖</span>
+        <div>
+          <p class="eyebrow">تحدٍ قرآني</p>
+          <h2>لعبة تخمين الآية</h2>
+          <p>اقرأ الآية واختر السورة الصحيحة. العب فردياً، أو تحدَّ صديقك أونلاين عبر غرفة خاصة وكود مشاركة.</p>
+          <button type="button" class="button button-primary" data-open-guess-ayah>ابدأ لعبة تخمين الآية</button>
+        </div>
+      </article>
+    </section>
+
+    <div id="guess-ayah-app" class="guess-ayah-app" hidden>
+      <div class="ga-activity-back"><button type="button" class="ga-back" data-close-guess-ayah>← العودة إلى فعاليات هُدى</button></div>
       <!-- شاشة اختيار الوضع -->
       <section id="ga-mode-select" class="ga-panel ga-mode-select">
         <button type="button" class="ga-mode-card" data-mode="solo">
@@ -30,8 +43,8 @@
         </button>
         <button type="button" class="ga-mode-card" data-mode="multiplayer">
           <span class="ga-mode-icon" aria-hidden="true">👥</span>
-          <strong>لعب جماعي</strong>
-          <span>أنشئ غرفة أو انضم بكود، والعب مع أصدقائك مباشرة.</span>
+          <strong>اللعب أونلاين</strong>
+          <span>أنشئ غرفة أو انضم بكود، ثم اختر السورة الصحيحة أسرع من صديقك واجمع النقاط.</span>
         </button>
       </section>
 

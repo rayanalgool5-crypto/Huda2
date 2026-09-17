@@ -686,7 +686,14 @@ body.dark { --ink:#e9f4ef; --muted:#a4b7af; --page:#10211c; --surface:#172c25; -
 }
 
 /* ===================== لعبة تخمين الآية ===================== */
+.huda-games-hub { max-width:760px; margin:0 auto; }
+.huda-game-card { display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start; padding:28px; background:linear-gradient(135deg,var(--surface),var(--emerald-pale)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+.huda-game-card-icon { display:grid; place-items:center; width:58px; height:58px; background:var(--surface); border:1px solid var(--line); border-radius:18px; font-size:1.7rem; }
+.huda-game-card .eyebrow { margin:0 0 4px; }
+.huda-game-card h2 { margin:0; color:var(--emerald-dark); font-size:1.35rem; }
+.huda-game-card p:not(.eyebrow) { margin:8px 0 18px; color:var(--muted); line-height:1.8; }
 .guess-ayah-app { max-width:760px; margin:0 auto; }
+.ga-activity-back { margin-bottom:10px; }
 .ga-panel { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:26px; }
 .ga-mode-select { display:grid; grid-template-columns:1fr 1fr; gap:16px; background:none; border:0; box-shadow:none; padding:0; }
 .ga-mode-card { display:flex; flex-direction:column; align-items:flex-start; gap:8px; text-align:right; padding:26px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow-soft); transition:.2s; }
@@ -737,6 +744,7 @@ body.dark { --ink:#e9f4ef; --muted:#a4b7af; --page:#10211c; --surface:#172c25; -
 .ga-players-list li b { color:var(--emerald-dark); }
 
 @media (max-width:640px) {
+  .huda-game-card { grid-template-columns:1fr; padding:22px; }
   .ga-mode-select,.ga-mp-entry-grid,.ga-options { grid-template-columns:1fr; }
   .ga-verse-text { font-size:1.25rem; }
 }

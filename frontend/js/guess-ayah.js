@@ -12,6 +12,31 @@
     entry: document.getElementById('ga-mp-entry'),
     room: document.getElementById('ga-room'),
   };
+  const gamesHub = document.getElementById('huda-games-hub');
+
+  function openGame() {
+    gamesHub.hidden = true;
+    root.hidden = false;
+    showPanel('select');
+  }
+
+  async function closeGame() {
+    stopPolling();
+    if (roomCode && roomToken) {
+      try { await postJson(`/rooms/${roomCode}/leave`, { token: roomToken }); } catch { /* لا نمنع العودة إن انتهت الغرفة */ }
+    }
+    roomCode = null;
+    roomToken = null;
+    root.hidden = true;
+    gamesHub.hidden = false;
+  }
+
+  document.querySelectorAll('[data-open-guess-ayah]').forEach((button) => {
+    button.addEventListener('click', openGame);
+  });
+  document.querySelectorAll('[data-close-guess-ayah]').forEach((button) => {
+    button.addEventListener('click', closeGame);
+  });
 
   function showPanel(name) {
     Object.entries(panels).forEach(([key, el]) => { if (el) el.hidden = key !== name; });
@@ -153,8 +178,10 @@
   let roomToken = null;
   let pollTimer = null;
   let timerRaf = null;
+  let autoNextRoundTimer = null;
   let lastRoundIndexSeen = 0;
   let answeredThisRound = false;
+  let lastAutoNextRound = 0;
 
   const roomCodeValue = document.getElementById('ga-room-code-value');
   const copyCodeBtn = document.getElementById('ga-copy-code');
@@ -190,6 +217,8 @@
     clearInterval(pollTimer);
     pollTimer = null;
     cancelAnimationFrame(timerRaf);
+    clearTimeout(autoNextRoundTimer);
+    autoNextRoundTimer = null;
   }
 
   async function pollOnce() {
@@ -229,9 +258,12 @@
       cancelAnimationFrame(timerRaf);
       const mine = state.players.find((p) => p.isYou);
       const correctName = state.round.surahName;
-      if (state.round.yourAnswer === state.round.correctIndex && state.round.yourAnswer !== null) {
-        resultText.textContent = `أحسنت يا ${mine?.name || ''}! الإجابة الصحيحة: سورة ${correctName}.`;
+      if (state.round.winnerIsYou) {
+        resultText.textContent = `أحسنت يا ${mine?.name || ''}! كنت الأسرع — الإجابة الصحيحة: سورة ${correctName}.`;
         resultText.classList.remove('ga-feedback-error');
+      } else if (state.round.winnerName) {
+        resultText.textContent = `فاز ${state.round.winnerName} بأسرع إجابة صحيحة. السورة هي: ${correctName}.`;
+        resultText.classList.add('ga-feedback-error');
       } else {
         resultText.textContent = `الإجابة الصحيحة: سورة ${correctName}.`;
         resultText.classList.add('ga-feedback-error');
@@ -239,6 +271,10 @@
       nextRoundBtn.hidden = !state.isHost;
       resultHint.hidden = state.isHost;
       resultHint.textContent = 'بانتظار صاحب الغرفة لبدء الجولة التالية…';
+      if (state.isHost && state.round.index !== lastAutoNextRound) {
+        lastAutoNextRound = state.round.index;
+        autoNextRoundTimer = window.setTimeout(() => startRoomRound(), 2600);
+      }
     }
 
     playersList.innerHTML = state.players
@@ -270,17 +306,24 @@
     }
   }
 
-  startBtn?.addEventListener('click', async () => {
+  async function startRoomRound() {
+    if (!roomCode || !roomToken) return;
     startBtn.disabled = true;
-    try { await postJson(`/rooms/${roomCode}/start`, { token: roomToken }); pollOnce(); }
-    catch (error) { lobbyHint.hidden = false; lobbyHint.textContent = error.message; }
-    finally { startBtn.disabled = false; }
-  });
-  nextRoundBtn?.addEventListener('click', async () => {
     nextRoundBtn.disabled = true;
     try { await postJson(`/rooms/${roomCode}/start`, { token: roomToken }); pollOnce(); }
-    catch (error) { resultHint.hidden = false; resultHint.textContent = error.message; }
-    finally { nextRoundBtn.disabled = false; }
+    catch (error) {
+      const feedback = lastRoundIndexSeen ? resultHint : lobbyHint;
+      feedback.hidden = false;
+      feedback.textContent = error.message;
+    } finally {
+      startBtn.disabled = false;
+      nextRoundBtn.disabled = false;
+    }
+  }
+  startBtn?.addEventListener('click', startRoomRound);
+  nextRoundBtn?.addEventListener('click', () => {
+    clearTimeout(autoNextRoundTimer);
+    startRoomRound();
   });
 
   document.querySelectorAll('[data-leave]').forEach((btn) => {

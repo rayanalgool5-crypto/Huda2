@@ -81,7 +81,8 @@ router.post('/rooms/:code/start', async (req, res) => {
     const result = await rooms.startRound(req.params.code, req.body?.token);
     if (result.error === 'room_not_found') return res.status(404).json({ message: 'لا توجد غرفة بهذا الكود.' });
     if (result.error === 'not_host') return res.status(403).json({ message: 'فقط صاحب الغرفة يمكنه بدء الجولة.' });
-    if (result.error === 'no_players') return res.status(400).json({ message: 'لا يوجد لاعبون في الغرفة.' });
+    if (result.error === 'need_more_players') return res.status(400).json({ message: 'بانتظار انضمام لاعب ثانٍ لبدء التحدي.' });
+    if (result.error === 'round_in_progress') return res.status(409).json({ message: 'الجولة ما زالت جارية.' });
     res.json({ state: rooms.publicState(result.room, req.body?.token) });
   } catch (error) {
     console.error('Start round error:', error.message);

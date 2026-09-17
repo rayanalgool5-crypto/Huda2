@@ -83,8 +83,11 @@ function syncRound(room) {
 async function startRound(code, token) {
   const room = getRoom(code);
   if (!room) return { error: 'room_not_found' };
+  syncRound(room);
   if (room.hostToken !== token) return { error: 'not_host' };
-  if (room.players.size < 1) return { error: 'no_players' };
+  if (room.status === 'playing') return { error: 'round_in_progress' };
+  // الأونلاين تحدٍّ بين شخصين على الأقل؛ لا نبدأ غرفة قبل انضمام الصديق.
+  if (room.players.size < 2) return { error: 'need_more_players' };
 
   const generated = await generateRound({ excludeSurahs: room.excludeSurahs.slice(-6) });
   room.excludeSurahs.push(generated.surahNumber);
@@ -99,6 +102,7 @@ async function startRound(code, token) {
     startedAt: Date.now(),
     endsAt: Date.now() + ROUND_MS,
     answers: new Map(),
+    winnerToken: null,
   };
   room.status = 'playing';
   touch(room);
@@ -120,6 +124,10 @@ function submitAnswer(code, token, optionIndex) {
     const speedBonus = Math.max(0, Math.round(50 * (1 - elapsedMs / ROUND_MS)));
     const player = room.players.get(token);
     if (player) player.score += 100 + speedBonus;
+    // أول إجابة صحيحة هي الفائزة في سباق هذه الجولة؛ نكشف النتيجة فوراً
+    // حتى لا يحصل لاعبان على نقاط الفوز لنفس الآية.
+    room.round.winnerToken = token;
+    room.status = 'result';
   }
 
   // إن أجاب كل اللاعبين المتصلين، ننهي الجولة فوراً بدل انتظار المهلة كاملة.
@@ -152,6 +160,8 @@ function publicState(room, viewerToken) {
     yourAnswer: room.round.answers.get(viewerToken)?.optionIndex ?? null,
     correctIndex: revealAnswer ? room.round.correctIndex : null,
     surahName: revealAnswer ? room.round.surahName : null,
+    winnerName: revealAnswer && room.round.winnerToken ? room.players.get(room.round.winnerToken)?.name || null : null,
+    winnerIsYou: revealAnswer && room.round.winnerToken === viewerToken,
   } : null;
 
   return {
