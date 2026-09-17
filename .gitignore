@@ -9,6 +9,12 @@ backend/data/*.db-journal
 backend/data/*.db-wal
 backend/data/*.db-shm
 
+# قاعدة بيانات التشغيل المحلية الموجودة في جذر المشروع
+/data/*.db
+/data/*.db-journal
+/data/*.db-wal
+/data/*.db-shm
+
 # اعتماديات Node
 node_modules/
 backend/node_modules/

@@ -8,6 +8,8 @@
   const modal = document.getElementById('hadith-modal');
   const modalTitle = document.getElementById('modal-title');
   const modalText = document.getElementById('modal-text');
+  const explainBtn = document.getElementById('add-explanation-btn');
+  let activeHadith = null;
 
   let collection = 'bukhari';
   let activeCategory = 'all';
@@ -20,10 +22,11 @@
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
   }[char]));
 
-  async function fetchJson(path) {
-    const response = await fetch(`${API_BASE}${path}`, { credentials: 'include' });
-    if (!response.ok) throw new Error('request failed');
-    return response.json();
+  async function fetchJson(path, options = {}) {
+    const response = await fetch(`${API_BASE}${path}`, { credentials: 'include', ...options });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.message || 'request failed');
+    return data;
   }
 
   async function loadCategories() {
@@ -117,6 +120,7 @@
     if (!button) return;
     const hadith = currentHadiths[Number(button.dataset.insight)];
     if (!hadith) return;
+    activeHadith = hadith;
     const cat = categories.find((c) => c.id === hadith.category);
     modalTitle.textContent = cat ? `شرح الحديث — من باب: ${cat.name}` : 'شرح الحديث';
     const source = hadith.explanationSource || 'المصدر: بيانات الحديث المعتمدة في المشروع';
@@ -125,9 +129,33 @@
       : `رواه ${hadith.narrator || ''} في ${hadith.book === 'bukhari' ? 'صحيح البخاري' : 'صحيح مسلم'}${hadith.agreed ? ' (متفق عليه)' : ''}.\n\nلم يُضف شرحٌ موسّع لهذا الحديث في قاعدة البيانات بعد.`;
     const note = modal.querySelector('.modal-note');
     if (note) note.textContent = source;
+    if (explainBtn) {
+      explainBtn.hidden = Boolean(hadith.explanation);
+      explainBtn.disabled = false;
+      explainBtn.textContent = 'إضافة شرح';
+    }
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
   });
+
+  if (explainBtn) {
+    explainBtn.addEventListener('click', async () => {
+      if (!activeHadith) return;
+      explainBtn.disabled = true;
+      explainBtn.textContent = 'جاري توليد الشرح…';
+      try {
+        const data = await fetchJson(`/hadith/${activeHadith.id}/explain`, { method: 'POST' });
+        modalText.textContent = data.explanation;
+        const note = modal.querySelector('.modal-note');
+        if (note) note.textContent = data.source || 'شرح مولَّد بواسطة الذكاء الاصطناعي — راجع المصادر العلمية للتفصيل';
+        explainBtn.hidden = true;
+      } catch (error) {
+        explainBtn.disabled = false;
+        explainBtn.textContent = 'إضافة شرح';
+        HudaUtils?.showToast?.(error.message || 'تعذّر توليد الشرح الآن. حاول لاحقاً.', 'error');
+      }
+    });
+  }
 
   modal.addEventListener('click', (event) => {
     if (event.target.closest('[data-close-modal]')) {

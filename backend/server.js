@@ -13,7 +13,10 @@ const hadithRoutes = require('./routes/hadith');
 const pushRoutes = require('./routes/push');
 const gamesRoutes = require('./routes/games'); // معطّل حالياً - انظر server.js أسفل
 const quranDownloadRoutes = require('./routes/quran-download');
+const aiRoutes = require('./routes/ai'); // مساعد "مسلم" الذكي — يحتاج GEMINI_API_KEY في .env
+const guessAyahRoutes = require('./routes/guess-ayah'); // لعبة "تخمين الآية" (فردي + جماعي بكود غرفة)
 const prayerPushScheduler = require('./lib/prayer-push-scheduler');
+const SQLiteSessionStore = require('./lib/sqlite-session-store');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -65,11 +68,27 @@ app.use((req, res, next) => {
   next();
 });
 
+// مهم: بدون "store" هنا، express-session يستخدم MemoryStore الافتراضية —
+// وهي تُخزَّن بذاكرة العملية (process) فقط، فتُمسح بالكامل مع أي إعادة
+// تشغيل/إعادة نشر للسيرفر (وهذا شائع جداً على Render، خصوصاً الخطة المجانية
+// التي "تنام" وتُعاد تشغيلها). هذا بالضبط سبب مشكلة "بسجّل دخول بس ما
+// بيحفظ البيانات": الجلسة كانت تُفقد بمجرد إعادة تشغيل الخادم. نربطها الآن
+// بمخزن دائم فوق نفس قاعدة بيانات SQLite المستخدمة أصلاً بالمشروع.
+const sessionStore = new SQLiteSessionStore({ ttl: 1000 * 60 * 60 * 24 * 14 });
+// تنظيف دوري للجلسات المنتهية (كل ساعة) حتى لا يتضخّم الجدول إلى ما لا نهاية.
+setInterval(() => {
+  try { sessionStore.clearExpired(); } catch (error) { console.error('Session cleanup error:', error); }
+}, 1000 * 60 * 60);
+
 app.use(
   session({
+    store: sessionStore,
     secret: process.env.SESSION_SECRET || 'change-this-secret-in-production',
     resave: false,
     saveUninitialized: false,
+    // rolling: تُجدَّد مدة صلاحية الكوكي مع كل طلب طالما المستخدم نشط، بدل
+    // أن تُحسب فقط من لحظة تسجيل الدخول — تجربة "تذكرني" أقرب لتوقع المستخدم.
+    rolling: true,
     cookie: {
       httpOnly: true,
       // الفرونت اند (Netlify) والباك اند (مثلاً Render) على نطاقين مختلفين تماماً،
@@ -77,7 +96,7 @@ app.use(
       // بالتطوير المحلي (نفس الأصل) نُبقيها lax لأنه أبسط وما بيحتاج HTTPS.
       secure: NODE_ENV === 'production',
       sameSite: NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 1000 * 60 * 60 * 24 * 6, // 6 أيام (حسب طلب المالك)
+      maxAge: 1000 * 60 * 60 * 24 * 14, // أسبوعان (حسب طلب المالك)
     },
   })
 );
@@ -94,6 +113,8 @@ app.use('/api/push', pushRoutes); // اشتراكات إشعارات الأذا�
 // هذا المسار بالكامل من الخادم حتى لا يبقى فعّالاً بالخلفية.
 // app.use('/api/games', gamesRoutes);
 app.use('/api/quran', quranDownloadRoutes); // تنزيل السورة (نص فقط في وسم ID3، بدون أي صورة غلاف)
+app.use('/api/ai', aiRoutes); // مساعد "مسلم" الذكي
+app.use('/api/guess-ayah', guessAyahRoutes); // لعبة تخمين الآية (فردي + غرف جماعية بكود)
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

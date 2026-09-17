@@ -7,19 +7,31 @@
   if (!config || !config.enabled) return;
 
   const IDLE_MS = Number(config.idleMs) || 10000;
+  // "لا تخرج لي مرة أخرى": تعطيل لهذه الجلسة فقط (تُستخدم sessionStorage
+  // عمداً بدل localStorage)، فبمجرد إغلاق المتصفح/التبويب يُعاد هذا القرار
+  // تلقائياً في المرة القادمة.
+  const DISMISS_KEY = 'huda_idle_break_dismissed';
   let timer = null;
   let open = false;
   let destroyed = false;
 
+  function isDismissedForSession() {
+    try { return sessionStorage.getItem(DISMISS_KEY) === '1'; } catch { return false; }
+  }
+  function dismissForSession() {
+    try { sessionStorage.setItem(DISMISS_KEY, '1'); } catch { /* تجاهل إن كان التخزين معطلاً */ }
+  }
+
   const activityEvents = ['pointerdown', 'pointermove', 'pointerup', 'touchstart', 'touchmove', 'keydown', 'wheel', 'scroll'];
   const reset = () => {
-    if (destroyed || open) return;
+    if (destroyed || open || isDismissedForSession()) return;
     clearTimeout(timer);
     timer = setTimeout(showPrompt, IDLE_MS);
   };
 
   function showPrompt() {
     if (destroyed || open) return;
+    if (isDismissedForSession()) return;
     if (typeof config.canShow === 'function' && !config.canShow()) {
       reset();
       return;
@@ -41,6 +53,7 @@
           <button type="button" class="button huda-idle-yes">نعم</button>
           <button type="button" class="button button-secondary huda-idle-no">لا</button>
         </div>
+        <button type="button" class="huda-idle-dismiss">لا تُظهر لي هذا مرة أخرى (لهذه الجلسة فقط)</button>
       </div>`;
     document.body.appendChild(overlay);
 
@@ -52,6 +65,12 @@
         open = false;
         showSnake();
       }, 220);
+    });
+    overlay.querySelector('.huda-idle-dismiss').addEventListener('click', () => {
+      dismissForSession();
+      overlay.remove();
+      open = false;
+      clearTimeout(timer);
     });
   }
 

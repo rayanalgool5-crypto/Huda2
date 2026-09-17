@@ -9,7 +9,7 @@
 
 const { GAME_TYPES, DIMENSIONS, THEMES, DIFFICULTIES, ALLOWED_ELEMENT_TYPES, WIN_CONDITION_TYPES } = require('./game-elements');
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const REQUEST_TIMEOUT_MS = 20000;
 

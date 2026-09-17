@@ -43,15 +43,19 @@
   const arabicNumber = (number) => new Intl.NumberFormat('ar-EG').format(number);
   // التلاوة تعمل بملف سورة واحد فقط لكل قارئ. عند الضغط على آية
   // نتحرك داخل نفس الملف إلى timestamp الآية، بدل تحميل ملف MP3 جديد.
+  // كل قارئ له أكثر من اسم/صيغة محتملة في مصدر mp3quran.net (مع أو بدون
+  // "ال" التعريف، مع أو بدون مسافة قبل الاسم الأخير...)، فنزوّد كل قارئ
+  // بأكبر عدد ممكن من الصيغ لتقليل احتمال فشل المطابقة (مثل ما كان يحصل
+  // أحياناً مع "محمد اللحيدان" فقط بصيغة واحدة).
   const RECITERS = {
-    Alafasy_128kbps: { aliases: ['مشاري العفاسي', 'Mishary Rashid al-`Afasy'] },
-    Minshawy_Mujawwad_192kbps: { aliases: ['محمد صديق المنشاوي', 'محمد صديق المنشاوي مجود'] },
-    Husary_128kbps: { aliases: ['محمود خليل الحصري'] },
-    Abdul_Basit_Murattal_192kbps: { aliases: ['عبدالباسط عبدالصمد', 'عبدالباسط عبد الصمد'] },
-    'Yasser_Ad-Dussary_128kbps': { aliases: ['ياسر الدوسري'] },
-    'Mohammed_Al-Lohaidan_MP3QURAN': { aliases: ['محمد اللحيدان'] },
-    'Maher_AlMuaiqly_64kbps': { aliases: ['ماهر المعيقلي'] },
-    'Islam_Sobhi_MP3QURAN': { aliases: ['إسلام صبحي'] },
+    Alafasy_128kbps: { aliases: ['مشاري العفاسي', 'مشاري راشد العفاسي', 'Mishary Rashid al-`Afasy'] },
+    Minshawy_Mujawwad_192kbps: { aliases: ['محمد صديق المنشاوي', 'محمد صديق المنشاوي مجود', 'المنشاوي مجود'] },
+    Husary_128kbps: { aliases: ['محمود خليل الحصري', 'الحصري'] },
+    Abdul_Basit_Murattal_192kbps: { aliases: ['عبدالباسط عبدالصمد', 'عبدالباسط عبد الصمد', 'عبد الباسط عبد الصمد'] },
+    'Yasser_Ad-Dussary_128kbps': { aliases: ['ياسر الدوسري', 'ياسر الدوسرى'] },
+    'Mohammed_Al-Lohaidan_MP3QURAN': { aliases: ['محمد اللحيدان', 'محمد الحيدان', 'اللحيدان', 'الحيدان'] },
+    'Maher_AlMuaiqly_64kbps': { aliases: ['ماهر المعيقلي', 'ماهر المعيقلى'] },
+    'Islam_Sobhi_MP3QURAN': { aliases: ['إسلام صبحي', 'اسلام صبحي'] },
     'Abdurrahmaan_As-Sudais_192kbps': { aliases: ['عبدالرحمن السديس', 'عبد الرحمن السديس'] },
   };
 
@@ -70,18 +74,35 @@
     .replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '')
     .toLowerCase();
 
-  function findReciterInCatalog(key) {
+  // نرجّع كل المطابقات المحتملة (وليس أول واحدة فقط)، لأن مصدر mp3quran.net
+  // أحياناً يحتوي أكثر من قيد لنفس القارئ (روايات/إصدارات مختلفة)، وبعضها
+  // قد لا يملك تلاوة كاملة (114 سورة) بينما يملكها قيد آخر لنفس الاسم.
+  function findReciterCandidates(key) {
     const aliases = RECITERS[key]?.aliases || [];
     const normalizedAliases = aliases.map(normalizeArabic).filter(Boolean);
-    return reciterCatalog?.find((reciter) => {
+    if (!reciterCatalog || !normalizedAliases.length) return [];
+    return reciterCatalog.filter((reciter) => {
       const name = normalizeArabic(reciter.name);
       return normalizedAliases.some((alias) => name.includes(alias) || alias.includes(name));
-    }) || null;
+    });
+  }
+
+  // أفضل "moshaf" (تسجيل) لقارئ معيّن: نفضّل ما يغطي القرآن كاملاً (114 سورة)،
+  // وإلا نأخذ الأوسع تغطية المتاحة، بدل الاكتفاء بأول عنصر في المصفوفة فقط
+  // (وهو ما كان يسبب فشل بعض القرّاء إن لم يكن أول تسجيل عندهم هو الكامل).
+  function pickBestMoshaf(reciter) {
+    const list = Array.isArray(reciter?.moshaf) ? reciter.moshaf.filter((m) => m?.server && m?.id) : [];
+    if (!list.length) return null;
+    const full = list.find((item) => Number(item.surah_total) === 114);
+    if (full) return full;
+    return list.slice().sort((a, b) => Number(b.surah_total || 0) - Number(a.surah_total || 0))[0];
   }
 
   async function loadReciterCatalog() {
     if (reciterCatalog) return reciterCatalog;
-    const response = await HudaUtils.fetchWithRetry(`${MP3QURAN_API}/reciters?language=ar`, { timeout: CONFIG.API.TIMEOUT }, 2);
+    // زيادة المهلة والمحاولات هنا تحديداً: mp3quran.net أحياناً يكون بطيئاً،
+    // وفشل هذا الطلب وحده هو ما يجعل "كل" القرّاء يبدون كأنهم لا يعملون.
+    const response = await HudaUtils.fetchWithRetry(`${MP3QURAN_API}/reciters?language=ar`, { timeout: Math.max(CONFIG.API.TIMEOUT, 15000) }, 3);
     if (!response.ok) throw new Error('تعذّر تحميل قائمة القرّاء');
     const data = await response.json();
     reciterCatalog = Array.isArray(data.reciters) ? data.reciters : [];
@@ -92,13 +113,26 @@
   async function ensureReciter() {
     const key = elements.reciter.value;
     if (activeReciter?.key === key) return activeReciter;
-    await loadReciterCatalog();
-    const reciter = findReciterInCatalog(key);
-    if (!reciter) throw new Error('تعذّر العثور على هذا القارئ في مصدر التلاوات');
-    const moshaf = Array.isArray(reciter.moshaf)
-      ? (reciter.moshaf.find((item) => Number(item.surah_total) === 114) || reciter.moshaf[0])
-      : null;
-    if (!moshaf?.server || !moshaf?.id) throw new Error('لا توجد تلاوة كاملة متاحة لهذا القارئ');
+    try {
+      await loadReciterCatalog();
+    } catch (error) {
+      // فشل تحميل القائمة كاملةً (مصدر خارجي بطيء/متعطل مؤقتاً) — نعيد
+      // المحاولة مرة واحدة بعد تصفير الكاش، بدل الفشل الصامت النهائي.
+      reciterCatalog = null;
+      await loadReciterCatalog();
+    }
+    const candidates = findReciterCandidates(key);
+    if (!candidates.length) throw new Error('تعذّر العثور على هذا القارئ في مصدر التلاوات');
+
+    // من بين كل المطابقات، نختار أول واحد نجح باختيار moshaf صالح له.
+    let reciter = null;
+    let moshaf = null;
+    for (const candidate of candidates) {
+      const best = pickBestMoshaf(candidate);
+      if (best) { reciter = candidate; moshaf = best; break; }
+    }
+    if (!reciter || !moshaf) throw new Error('لا توجد تلاوة كاملة متاحة لهذا القارئ حالياً');
+
     activeReciter = {
       key,
       reciterId: reciter.id,

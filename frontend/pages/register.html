@@ -19,6 +19,7 @@
       <label>البريد الإلكتروني<input type="email" name="email" autocomplete="email" placeholder="name@example.com" required></label>
       <label>كلمة المرور<input type="password" name="password" autocomplete="new-password" placeholder="8 أحرف على الأقل" minlength="8" required></label>
       <label>تأكيد كلمة المرور<input type="password" name="confirmation" autocomplete="new-password" placeholder="أعد كتابة كلمة المرور" minlength="6" required></label>
+      <label class="auth-terms"><input type="checkbox" name="terms" required> أوافق على <a href="copyright.html" target="_blank" rel="noopener">الشروط والأحكام</a></label>
       <p id="form-message" class="form-message" role="alert" aria-live="polite"></p>
       <button class="button button-primary button-wide" type="submit">إنشاء الحساب</button>
     </form>
@@ -46,6 +47,7 @@
       event.preventDefault(); const form = event.currentTarget; const message = document.getElementById('form-message');
       const submitButton = form.querySelector('button[type="submit"]');
       const name = form.name.value.trim(), email = form.email.value.trim().toLowerCase(), password = form.password.value;
+      if (!form.terms.checked) { message.textContent = 'يجب الموافقة على الشروط والأحكام أولاً.'; return; }
       if (!form.checkValidity() || password !== form.confirmation.value) { message.textContent = password !== form.confirmation.value ? 'كلمتا المرور غير متطابقتين.' : 'يرجى إكمال الحقول بصورة صحيحة.'; return; }
       submitButton.disabled = true; message.textContent = '';
       const { ok, data } = await Huda.register(name, email, password, form.confirmation.value);

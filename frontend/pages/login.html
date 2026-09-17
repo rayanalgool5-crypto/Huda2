@@ -17,6 +17,7 @@
     <form id="login-form" novalidate>
       <label>البريد الإلكتروني<input type="email" name="email" autocomplete="email" placeholder="name@example.com" required></label>
       <label>كلمة المرور<input type="password" name="password" autocomplete="current-password" placeholder="••••••••" minlength="8" required></label>
+      <label class="auth-terms"><input type="checkbox" name="terms" required> أوافق على <a href="copyright.html" target="_blank" rel="noopener">الشروط والأحكام</a></label>
       <p id="form-message" class="form-message" role="alert" aria-live="polite"></p>
       <button class="button button-primary button-wide" type="submit">دخول</button>
     </form>
@@ -44,6 +45,7 @@
       event.preventDefault();
       const submitButton = form.querySelector('button[type="submit"]');
       const email = form.email.value.trim().toLowerCase(), password = form.password.value;
+      if (!form.terms.checked) { message.textContent = 'يجب الموافقة على الشروط والأحكام أولاً.'; return; }
       if (!form.checkValidity()) { message.textContent = 'يرجى إدخال بريد صحيح وكلمة مرور من 8 أحرف على الأقل.'; return; }
       submitButton.disabled = true; message.textContent = '';
       const { ok, data } = await Huda.login(email, password);
