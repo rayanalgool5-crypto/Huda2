@@ -1,0 +1,27 @@
+{
+  "name": "هُدى",
+  "short_name": "هُدى",
+  "description": "رفيقك اليومي — القرآن الكريم، الحديث الشريف، مواقيت الصلاة، والتسبيح والأذكار.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "dir": "rtl",
+  "lang": "ar",
+  "background_color": "#F7F8F6",
+  "theme_color": "#2E6B57",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

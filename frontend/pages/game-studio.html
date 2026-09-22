@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#2E6B57">
+  <title>فعاليات هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/huda-icon.png">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell">
+  <header class="site-header">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/huda-slogan.png" alt="هُدى"></a><button class="nav-trigger" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="التنقل الرئيسي"><a href="../index.html">الرئيسية</a><a href="quran.html">القرآن الكريم</a><a href="hadith.html">الحديث الشريف</a><a href="prayer-times.html">مواقيت الصلاة</a><a href="tasbeeh.html">التسبيح والأذكار</a><a href="stats.html">الإحصائيات والتقدم</a><a href="about.html">من أنا</a><a href="contact.html">تواصل معي</a><a class="active" href="game-studio.html">فعاليات هُدى</a><a href="download.html">تنزيل التطبيق</a></nav>
+    <div class="header-actions"><button class="icon-button theme-toggle" aria-label="تفعيل الوضع الداكن" title="تبديل المظهر">☾</button><button class="logout-button">تسجيل الخروج</button></div>
+  </header>
+
+  <main class="section-wrap page-main">
+    <div class="page-intro"><p class="eyebrow">فعاليات هُدى</p><h1>مساحة اللعب والتحدي</h1><p>اختر فعالية لتبدأ تحدّياً نافعاً مع نفسك أو مع أصدقائك.</p></div>
+
+    <section id="huda-games-hub" class="huda-games-hub" aria-label="ألعاب فعاليات هُدى">
+      <article class="huda-game-card">
+        <span class="huda-game-card-icon" aria-hidden="true">📖</span>
+        <div>
+          <p class="eyebrow">تحدٍ قرآني</p>
+          <h2>لعبة تخمين الآية</h2>
+          <p>اقرأ الآية واختر السورة الصحيحة. العب فردياً، أو تحدَّ صديقك أونلاين عبر غرفة خاصة وكود مشاركة.</p>
+          <button type="button" class="button button-primary" data-open-guess-ayah>ابدأ لعبة تخمين الآية</button>
+        </div>
+      </article>
+    </section>
+
+    <div id="guess-ayah-app" class="guess-ayah-app" hidden>
+      <div class="ga-activity-back"><button type="button" class="ga-back" data-close-guess-ayah>← العودة إلى فعاليات هُدى</button></div>
+      <!-- شاشة اختيار الوضع -->
+      <section id="ga-mode-select" class="ga-panel ga-mode-select">
+        <button type="button" class="ga-mode-card" data-mode="solo">
+          <span class="ga-mode-icon" aria-hidden="true">🎯</span>
+          <strong>لعب فردي</strong>
+          <span>خمّن الآيات في وقتك الخاص واجمع أكبر عدد من النقاط.</span>
+        </button>
+        <button type="button" class="ga-mode-card" data-mode="multiplayer">
+          <span class="ga-mode-icon" aria-hidden="true">👥</span>
+          <strong>اللعب أونلاين</strong>
+          <span>أنشئ غرفة أو انضم بكود، ثم اختر السورة الصحيحة أسرع من صديقك واجمع النقاط.</span>
+        </button>
+      </section>
+
+      <!-- الوضع الفردي -->
+      <section id="ga-solo" class="ga-panel" hidden>
+        <div class="ga-topbar">
+          <button type="button" class="ga-back" data-back>← رجوع</button>
+          <div class="ga-score">النقاط: <b id="ga-solo-score">0</b></div>
+        </div>
+        <div class="ga-verse-card">
+          <p class="ga-verse-label">خمّن اسم السورة التي وردت فيها هذه الآية:</p>
+          <blockquote id="ga-solo-verse" class="ga-verse-text">جاري تجهيز آية…</blockquote>
+        </div>
+        <div id="ga-solo-options" class="ga-options"></div>
+        <p id="ga-solo-feedback" class="ga-feedback" aria-live="polite"></p>
+        <button type="button" id="ga-solo-next" class="button button-primary" hidden>آية جديدة ←</button>
+      </section>
+
+      <!-- الدخول للعب الجماعي -->
+      <section id="ga-mp-entry" class="ga-panel" hidden>
+        <div class="ga-topbar"><button type="button" class="ga-back" data-back>← رجوع</button></div>
+        <div class="ga-mp-entry-grid">
+          <form id="ga-create-form" class="ga-entry-card">
+            <h3>إنشاء غرفة جديدة</h3>
+            <label>اسمك<input type="text" id="ga-create-name" maxlength="24" required placeholder="اكتب اسمك"></label>
+            <button class="button button-primary" type="submit">إنشاء الغرفة</button>
+          </form>
+          <form id="ga-join-form" class="ga-entry-card">
+            <h3>الانضمام لغرفة</h3>
+            <label>كود الغرفة<input type="text" id="ga-join-code" maxlength="6" required placeholder="مثال: AB12C" style="text-transform:uppercase"></label>
+            <label>اسمك<input type="text" id="ga-join-name" maxlength="24" required placeholder="اكتب اسمك"></label>
+            <button class="button button-primary" type="submit">انضمام</button>
+          </form>
+        </div>
+        <p id="ga-mp-entry-error" class="ga-feedback" aria-live="polite"></p>
+      </section>
+
+      <!-- غرفة اللعب الجماعي -->
+      <section id="ga-room" class="ga-panel" hidden>
+        <div class="ga-topbar">
+          <button type="button" class="ga-back" data-leave>← مغادرة الغرفة</button>
+          <div class="ga-room-code">كود الغرفة: <b id="ga-room-code-value"></b> <button type="button" id="ga-copy-code" title="نسخ الكود">نسخ</button></div>
+        </div>
+
+        <div id="ga-room-lobby" class="ga-room-lobby" hidden>
+          <p>بانتظار بدء الجولة… شارك الكود مع أصدقائك حتى ينضموا.</p>
+          <button type="button" id="ga-start-round" class="button button-primary" hidden>ابدأ الجولة</button>
+          <p id="ga-room-hint" class="ga-hint" hidden>بانتظار صاحب الغرفة ليبدأ الجولة…</p>
+        </div>
+
+        <div id="ga-room-playing" class="ga-room-playing" hidden>
+          <div class="ga-timer-track"><div id="ga-timer-bar" class="ga-timer-bar"></div></div>
+          <div class="ga-verse-card">
+            <p class="ga-verse-label">خمّن اسم السورة التي وردت فيها هذه الآية:</p>
+            <blockquote id="ga-room-verse" class="ga-verse-text"></blockquote>
+          </div>
+          <div id="ga-room-options" class="ga-options"></div>
+          <p id="ga-room-answered-count" class="ga-hint"></p>
+        </div>
+
+        <div id="ga-room-result" class="ga-room-result" hidden>
+          <p id="ga-room-result-text" class="ga-feedback"></p>
+          <button type="button" id="ga-next-round" class="button button-primary" hidden>الجولة التالية</button>
+          <p id="ga-room-result-hint" class="ga-hint" hidden>بانتظار صاحب الغرفة لبدء الجولة التالية…</p>
+        </div>
+
+        <h3 class="ga-players-title">اللاعبون</h3>
+        <ol id="ga-players-list" class="ga-players-list"></ol>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer site-footer--pro">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="../assets/huda-slogan.png" alt="هُدى">
+        <div>
+          <strong>هُدى — Huda</strong>
+          <p>منصة إسلامية رقمية تجمع لك القرآن الكريم والأذكار والأحاديث ومواقيت الصلاة في تجربة بسيطة ومنظمة.</p>
+        </div>
+      </div>
+      <nav class="footer-links" aria-label="روابط الفوتر">
+        <a href="../index.html">الرئيسية</a>
+        <a href="quran.html">القرآن</a>
+        <a href="tasbeeh.html">الأذكار</a>
+        <a href="contact.html">تواصل معي</a>
+        <a href="copyright.html">حقوق النشر</a>
+      </nav>
+      <div class="footer-social">
+        <a href="https://wa.me/0790952486" target="_blank" rel="noopener" aria-label="تواصل معي عبر واتساب"><img src="../assets/whatsapp.svg" alt="واتساب"></a>
+        <a href="https://instagram.com/rayan_algool2" target="_blank" rel="noopener" aria-label="تابعني على انستقرام"><img src="../assets/instagram.svg" alt="انستقرام"></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <small class="footer-copyright">© 2026 ريان رواد الغول — هُدى. جميع الحقوق محفوظة.</small>
+    </div>
+  </footer>
+
+  <!-- Configuration and utilities must load first -->
+  <script>
+    window.HUDA_IDLE_BREAK_CONFIG = { enabled: true, idleMs: 10000 };
+  </script>
+  <script src="../js/idle-break.js"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/pwa.js"></script>
+  <!-- Main application -->
+  <script src="../js/app.js"></script>
+  <script src="../js/ai-assistant.js"></script>
+  <script src="../js/guess-ayah.js"></script>
+</body>
+</html>

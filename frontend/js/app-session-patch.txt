@@ -1,0 +1,5 @@
+  async function getSession() {
+    // Retry an earlier failed check (Render may still be waking up).
+    if (!sessionChecked || !cachedUser) await fetchSession();
+    return cachedUser;
+  }

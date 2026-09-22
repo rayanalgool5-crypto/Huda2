@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#2E6B57">
+  <title>إنشاء حساب | هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/huda-icon.png">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="auth-page">
+  <main class="auth-card">
+    <a class="brand auth-brand" href="../index.html"><img class="brand-logo" src="../assets/huda-slogan.png" alt="هُدى"></a>
+    <div class="auth-intro"><p class="eyebrow">خطوة جميلة</p><h1>أنشئ حسابك</h1><p>احتفظ بتقدمك اليومي على هذا الجهاز.</p></div>
+    <form id="register-form" novalidate>
+      <label>الاسم<input type="text" name="name" autocomplete="name" placeholder="اسمك الكريم" minlength="2" maxlength="40" required></label>
+      <label>البريد الإلكتروني<input type="email" name="email" autocomplete="email" placeholder="name@example.com" required></label>
+      <label>كلمة المرور<input type="password" name="password" autocomplete="new-password" placeholder="8 أحرف على الأقل" minlength="8" required></label>
+      <label>تأكيد كلمة المرور<input type="password" name="confirmation" autocomplete="new-password" placeholder="أعد كتابة كلمة المرور" minlength="6" required></label>
+      <label class="auth-terms"><input type="checkbox" name="terms" required> أوافق على <a href="copyright.html" target="_blank" rel="noopener">الشروط والأحكام</a></label>
+      <p id="form-message" class="form-message" role="alert" aria-live="polite"></p>
+      <button class="button button-primary button-wide" type="submit">إنشاء الحساب</button>
+    </form>
+    <p class="auth-switch">لديك حساب بالفعل؟ <a href="login.html">سجّل دخولك</a></p>
+  </main>
+
+  <footer class="site-footer">
+    <small class="footer-copyright">© 2026 ريان رواد الغول — هُدى. جميع الحقوق محفوظة.</small>
+    <a class="footer-legal-link" href="copyright.html">حقوق النشر والملكية الفكرية</a>
+    <div class="footer-social">
+      <a href="https://wa.me/0790952486" target="_blank" rel="noopener" aria-label="تواصل معي عبر واتساب"><img src="../assets/whatsapp.svg" alt="واتساب"></a>
+     <a href="https://instagram.com/rayan_algool2" target="_blank" rel="noopener" aria-label="تابعني على انستقرام"><img src="../assets/instagram.svg" alt="انستقرام"></a>
+    </div>
+  </footer>
+  
+  <!-- Configuration and utilities must load first -->
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+<script src="../js/pwa.js"></script>
+  <!-- Main application -->
+  <script src="../js/app.js"></script>
+  <script>
+    Huda.redirectIfAuthenticated('../index.html');
+    document.getElementById('register-form').addEventListener('submit', async (event) => {
+      event.preventDefault(); const form = event.currentTarget; const message = document.getElementById('form-message');
+      const submitButton = form.querySelector('button[type="submit"]');
+      const name = form.name.value.trim(), email = form.email.value.trim().toLowerCase(), password = form.password.value;
+      if (!form.terms.checked) { message.textContent = 'يجب الموافقة على الشروط والأحكام أولاً.'; return; }
+      if (!form.checkValidity() || password !== form.confirmation.value) { message.textContent = password !== form.confirmation.value ? 'كلمتا المرور غير متطابقتين.' : 'يرجى إكمال الحقول بصورة صحيحة.'; return; }
+      submitButton.disabled = true; message.textContent = '';
+      const { ok, data } = await Huda.register(name, email, password, form.confirmation.value);
+      submitButton.disabled = false;
+      if (!ok) { message.textContent = data.message || 'تعذر إنشاء الحساب، حاول مرة أخرى.'; return; }
+      window.location.replace('../index.html');
+    });
+  </script>
+</body>
+</html>
