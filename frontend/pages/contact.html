@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#2E6B57">
+  <title>تواصل معي | هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/huda-icon.png">
+  <link rel="manifest" href="../manifest.json">
+  <link rel="apple-touch-icon" href="../assets/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell">
+  <header class="site-header">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/huda-slogan.png" alt="هُدى"></a><button class="nav-trigger" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="التنقل الرئيسي"><a href="../index.html">الرئيسية</a><a href="quran.html">القرآن الكريم</a><a href="hadith.html">الحديث الشريف</a><a href="prayer-times.html">مواقيت الصلاة</a><a href="tasbeeh.html">التسبيح والأذكار</a><a href="stats.html">الإحصائيات والتقدم</a><a href="about.html">من أنا</a><a class="active" href="contact.html">تواصل معي</a><a href="game-studio.html">فعاليات هُدى</a><a href="download.html">تنزيل التطبيق</a></nav>
+    <div class="header-actions"><button class="icon-button theme-toggle" aria-label="تفعيل الوضع الداكن" title="تبديل المظهر">☾</button><button class="logout-button">تسجيل الخروج</button></div>
+  </header>
+
+  <main class="section-wrap page-main">
+    <div class="page-intro" style="text-align:center">
+      <p class="eyebrow" style="text-align:center">لنتواصل</p>
+      <h1>تواصل معي</h1>
+    </div>
+
+    <section class="contact-hero">
+      <div class="contact-avatar"><img src="../assets/rayan-avatar.jpg" alt="ريان الغول"></div>
+      <p style="max-width:560px; color:var(--muted); margin:0">يمكنك إرسال رسالة مباشرة عبر البريد أو التواصل معي عبر منصات التواصل الاجتماعي.</p>
+    </section>
+
+    <section class="contact-form-card" aria-labelledby="contact-form-title">
+      <div class="contact-form-heading">
+        <p class="eyebrow">رسالة مباشرة</p>
+        <h2 id="contact-form-title">أرسل لي رسالة</h2>
+        <p>اكتب بريدك الإلكتروني واسمك ورسالتك، وستصل الرسالة مباشرة إلى بريدي.</p>
+      </div>
+      <form id="contact-form" class="contact-form" novalidate>
+        <label for="contact-email">البريد الإلكتروني</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="160" required placeholder="example@email.com">
+
+        <label for="contact-name">الاسم</label>
+        <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="80" required placeholder="اكتب اسمك">
+
+        <label for="contact-message">رسالتك</label>
+        <textarea id="contact-message" name="message" rows="7" maxlength="3000" required placeholder="اكتب رسالتك هنا..."></textarea>
+
+        <button class="primary-button contact-submit" type="submit">إرسال الرسالة</button>
+        <p id="contact-form-status" class="contact-form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="contact-social-section" aria-labelledby="social-title">
+      <div class="contact-social-heading">
+        <p class="eyebrow">منصات التواصل</p>
+        <h2 id="social-title">تواصل معي عبر منصات التواصل</h2>
+      </div>
+    <div class="contact-channels">
+      <a class="contact-channel" href="https://wa.me/0790952486" target="_blank" rel="noopener">
+        <img src="../assets/whatsapp.svg" alt="واتساب">
+        <div><p class="channel-name">واتساب</p><p class="channel-hint">اسرع طريقة للتوصال معي </p></div>
+      </a>
+      <a class="contact-channel" href="https://instagram.com/rayan_algool2" target="_blank" rel="noopener">
+        <img src="../assets/instagram.svg" alt="انستغرام">
+        <div><p class="channel-name">انستغرام</p><p class="channel-hint">rayan_algool2@</p></div>
+      </a>
+      <a class="contact-channel" href="https://discord.gg/k3e6zMcyn" target="_blank" rel="noopener">
+        <img src="../assets/discord-community.png" alt="مجتمع هُدى على ديسكورد">
+        <div><p class="channel-name">مجتمع ديسكورد</p><p class="channel-hint">انضم إلى مجتمع هُدى وتواصل معنا</p></div>
+      </a>
+    </div>
+    </section>
+  </main>
+
+  <footer class="site-footer site-footer--pro">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <img src="../assets/huda-slogan.png" alt="هُدى">
+        <div>
+          <strong>هُدى — Huda</strong>
+          <p>منصة إسلامية رقمية تجمع لك القرآن الكريم والأذكار والأحاديث ومواقيت الصلاة في تجربة بسيطة ومنظمة.</p>
+        </div>
+      </div>
+      <nav class="footer-links" aria-label="روابط الفوتر">
+        <a href="../index.html">الرئيسية</a>
+        <a href="quran.html">القرآن</a>
+        <a href="tasbeeh.html">الأذكار</a>
+        <a href="contact.html">تواصل معي</a>
+        <a href="copyright.html">حقوق النشر</a>
+        <a href="terms.html">الشروط والأحكام</a>
+        <a href="privacy.html">سياسة الخصوصية</a>
+      </nav>
+      <div class="footer-social">
+        <a href="https://wa.me/0790952486" target="_blank" rel="noopener" aria-label="تواصل معي عبر واتساب"><img src="../assets/whatsapp.svg" alt="واتساب"></a>
+        <a href="https://instagram.com/rayan_algool2" target="_blank" rel="noopener" aria-label="تابعني على انستقرام"><img src="../assets/instagram.svg" alt="انستقرام"></a>
+        <a href="https://discord.gg/k3e6zMcyn" target="_blank" rel="noopener" aria-label="انضم إلى مجتمع هُدى على ديسكورد"><img src="../assets/discord-community.png" alt="ديسكورد"></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <small class="footer-copyright">© 2026 ريان رواد الغول — هُدى. جميع الحقوق محفوظة.</small>
+    </div>
+  </footer>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+<script src="../js/pwa.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/ai-assistant.js"></script>
+  <script src="../js/contact.js"></script>
+</body>
+</html>

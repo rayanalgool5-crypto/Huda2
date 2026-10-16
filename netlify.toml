@@ -1,0 +1,19 @@
+# إعدادات نشر Netlify لموقع "هُدى"
+#
+# مهم جداً: base و publish معيّنين على "frontend" فقط، عشان مجلد backend/
+# (كود السيرفر، الاتصال بقاعدة البيانات، أي ملف .env مستقبلي) ما ينرفع
+# ولا ينعرض للعامة أبداً على Netlify. الباك اند بينشر بشكل منفصل كلياً
+# (على Render أو ما شابه) — راجع NETLIFY_DEPLOY.md لتفاصيل الخطوات.
+
+[build]
+  base = "frontend"
+  publish = "."
+  command = ""
+
+# رؤوس أمان أساسية لكل صفحات الموقع
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
