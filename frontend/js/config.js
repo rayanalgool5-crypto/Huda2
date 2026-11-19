@@ -4,10 +4,12 @@
  */
 
 
-const PRODUCTION_API_BASE_URL = 'https://huda0.onrender.com/api';
-
+const DEFAULT_API_BASE_URL = 'https://huda0.onrender.com/api';
 const isLocalDev = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-const resolvedApiBaseUrl = isLocalDev ? '/api' : PRODUCTION_API_BASE_URL;
+const configuredApiBaseUrl = (window.HUDA_API_BASE_URL || document.querySelector('meta[name="huda-api-base-url"]')?.content || '').trim();
+const resolvedApiBaseUrl = isLocalDev && !configuredApiBaseUrl
+  ? '/api'
+  : (configuredApiBaseUrl || DEFAULT_API_BASE_URL).replace(/\/+$/, '').replace(/\/$/, '').replace(/\/api$/i, '') + '/api';
 
 const CONFIG = {
   // API Configuration
@@ -84,14 +86,17 @@ const CONFIG = {
       init.headers = headers;
     }
 
-    return origFetch(input, init).then((res) => {
-      try {
-        if (/\/auth\/(login|register)(\?|$)/.test(url) && res.ok) {
-          res.clone().json().then((d) => { if (d && d.token) setToken(d.token); }).catch(() => {});
-        } else if (/\/auth\/(logout)(\?|$)/.test(url)) {
-          setToken(null);
+    return origFetch(input, init).then(async (res) => {
+      if (/\/auth\/(login|register)(\?|$)/.test(url) && res.ok) {
+        try {
+          const data = await res.clone().json();
+          if (data && data.token) setToken(data.token);
+        } catch (error) {
+          console.error('Could not persist Huda login token:', error);
         }
-      } catch {}
+      } else if (/\/auth\/(logout)(\?|$)/.test(url)) {
+        setToken(null);
+      }
       return res;
     });
   };

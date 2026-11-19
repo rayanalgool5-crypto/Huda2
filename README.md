@@ -80,3 +80,7 @@ huda-app/
 
 ## مساعد مسلم الذكي
 يعمل عبر Gemini من جهة الخادم فقط. في Render يجب ضبط `GEMINI_API_KEY` ويفضل `GEMINI_MODEL=gemini-3.8-flash` كمتغيرات Environment Variables.
+
+
+## مسلم — المساعد الذكي
+راجع `MUSLIM_SETUP.md` لإعداد مفتاح Gemini ومسارات المحادثات، و`MUSLIM_IMPLEMENTATION_REPORT.md` لتقرير التعديلات والاختبارات.

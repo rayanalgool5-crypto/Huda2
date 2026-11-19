@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const db = require('../db');
 const { issueToken } = require('../lib/session-token');
+const { sendEmail: deliverEmail } = require('../lib/email-service');
 
 const router = express.Router();
 
@@ -80,56 +81,30 @@ function escapeEmailHtml(value) {
 }
 
 async function sendResetEmail({ to, name, code }) {
-  const baseUrl = String(process.env.INFOBIP_BASE_URL || '').replace(/\/+$/, '');
-  const apiKey = process.env.INFOBIP_API_KEY;
-  const from = process.env.INFOBIP_FROM;
+  const from = process.env.EMAIL_FROM || process.env.INFOBIP_FROM;
   const replyTo = process.env.INFOBIP_REPLY_TO || from;
+  const safeName = escapeEmailHtml(name);
+  const safeCode = escapeEmailHtml(code);
+  const html = `<div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8;max-width:560px;margin:auto">` +
+    `<h2>استعادة كلمة السر — هُدى</h2><p>مرحباً ${safeName}،</p>` +
+    `<p>رمز التحقق الخاص باستعادة كلمة السر هو:</p>` +
+    `<div style="font-size:32px;font-weight:700;letter-spacing:8px;text-align:center;margin:24px 0">${safeCode}</div>` +
+    `<p>الرمز صالح لمدة ${RESET_CODE_TTL_MINUTES} دقائق.</p>` +
+    `<p>إذا لم تطلب استعادة كلمة السر، تجاهل هذه الرسالة.</p></div>`;
+  const text = [`مرحباً ${name}،`, '', `رمز التحقق الخاص باستعادة كلمة السر هو: ${code}`, '',
+    `الرمز صالح لمدة ${RESET_CODE_TTL_MINUTES} دقائق.`, 'إذا لم تطلب استعادة كلمة السر، تجاهل هذه الرسالة.'].join('\n');
+  return deliverEmail({ to, from, replyTo, subject: 'رمز استعادة كلمة السر — هُدى', text, html });
+}
 
-  if (!baseUrl || !apiKey || !from) {
-    throw new Error('Infobip email is not configured.');
-  }
 
-  const html = `
-    <div dir="rtl" style="font-family:Arial,sans-serif;line-height:1.8;max-width:560px;margin:auto">
-      <h2>استعادة كلمة السر — هُدى</h2>
-      <p>مرحباً ${escapeEmailHtml(name)}،</p>
-      <p>رمز التحقق الخاص باستعادة كلمة السر هو:</p>
-      <div style="font-size:32px;font-weight:700;letter-spacing:8px;text-align:center;margin:24px 0">${escapeEmailHtml(code)}</div>
-      <p>الرمز صالح لمدة ${RESET_CODE_TTL_MINUTES} دقائق.</p>
-      <p>إذا لم تطلب استعادة كلمة السر، تجاهل هذه الرسالة.</p>
-    </div>
-  `;
-  const text = [
-    `مرحباً ${name}،`, '',
-    `رمز التحقق الخاص باستعادة كلمة السر هو: ${code}`, '',
-    `الرمز صالح لمدة ${RESET_CODE_TTL_MINUTES} دقائق.`,
-    'إذا لم تطلب استعادة كلمة السر، تجاهل هذه الرسالة.'
-  ].join('\n');
-
-  // Infobip Email API v3: multipart/form-data.
-  const form = new FormData();
-  form.append('from', from);
-  form.append('to', to);
-  form.append('subject', 'رمز استعادة كلمة السر — هُدى');
-  form.append('text', text);
-  form.append('html', html);
-  if (replyTo) form.append('headers', JSON.stringify({ 'Reply-To': replyTo }));
-
-  const response = await fetch(`${baseUrl}/email/3/send`, {
-    method: 'POST',
-    headers: {
-      Authorization: `App ${apiKey}`,
-      Accept: 'application/json',
-    },
-    body: form,
+function establishLoginSession(req, userId) {
+  return new Promise((resolve, reject) => {
+    req.session.regenerate((error) => {
+      if (error) return reject(error);
+      req.session.userId = userId;
+      resolve();
+    });
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    console.error('Infobip email API error:', response.status, data);
-    throw new Error(data?.requestError?.serviceException?.text || data?.message || 'Infobip failed to send the email.');
-  }
-  return data;
 }
 
 // ---------- تسجيل حساب جديد ----------
@@ -162,7 +137,7 @@ router.post('/register', registerLimiter, async (req, res) => {
     ).run(trimmedName, normalizedEmail, passwordHash);
 
     const user = { id: Number(insert.lastInsertRowid), name: trimmedName, email: normalizedEmail, email_verified: true };
-    req.session.userId = user.id;
+    await establishLoginSession(req, user.id);
 
     return res.status(201).json({ success: true, user, token: issueToken(req), message: 'تم إنشاء الحساب بنجاح.' });
   } catch (error) {
@@ -185,7 +160,7 @@ router.post('/login', loginLimiter, async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password_hash);
     if (!isMatch) return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة السر غير صحيحة.' });
 
-    req.session.userId = user.id;
+    await establishLoginSession(req, user.id);
     return res.json({ success: true, token: issueToken(req), user: { id: user.id, name: user.name, email: user.email, email_verified: true } });
   } catch (error) {
     console.error('Login error:', error);

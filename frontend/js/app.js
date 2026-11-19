@@ -325,22 +325,17 @@ const Huda = (() => {
       const freshButton = document.querySelector('.logout-button:not([data-account-logout])');
       if (!freshButton) return;
 
-      if (!user) {
-        freshButton.textContent = 'تسجيل الدخول';
-        freshButton.setAttribute('aria-label', 'تسجيل الدخول لحفظ التقدم ومزامنته');
-        freshButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          window.location.assign(loginPath);
-        });
-      } else {
-        freshButton.textContent = 'الحساب';
-        freshButton.setAttribute('aria-label', `فتح حساب ${user.name || 'المستخدم'}`);
-        freshButton.title = 'فتح حسابي';
-        freshButton.addEventListener('click', (e) => {
-          e.preventDefault();
-          window.location.assign(accountPath);
-        });
-      }
+      const loggedIn = Boolean(user);
+      const icon = loggedIn
+        ? '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>'
+        : '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>';
+      freshButton.innerHTML = `${icon}<span>${loggedIn ? 'حسابي' : 'تسجيل الدخول'}</span>`;
+      freshButton.setAttribute('aria-label', loggedIn ? `فتح حساب ${user.name || 'المستخدم'}` : 'تسجيل الدخول لحفظ التقدم ومزامنته');
+      freshButton.title = loggedIn ? 'حسابي' : 'تسجيل الدخول';
+      freshButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.assign(loggedIn ? accountPath : loginPath);
+      });
     });
 
     // Let protected pages react when authentication state is known.
@@ -365,4 +360,35 @@ const Huda = (() => {
 
 document.addEventListener('DOMContentLoaded', () => {
   Huda.initApp();
+});
+
+
+// الوصول المخفي للإدارة: 15 ضغطة متتالية على شعار هُدى.
+// يُحفظ العداد في sessionStorage حتى لا تؤدي إعادة تحميل الصفحة بسبب رابط الشعار إلى تصفيره.
+document.addEventListener('DOMContentLoaded', () => {
+  const brand = document.querySelector('.brand');
+  if (!brand) return;
+  brand.addEventListener('click', event => {
+    try {
+      const now = Date.now();
+      const previousAt = Number(sessionStorage.getItem('huda_admin_click_at') || 0);
+      let count = Number(sessionStorage.getItem('huda_admin_click_count') || 0);
+      if (!previousAt || now - previousAt > 3000) count = 0;
+      count += 1;
+      sessionStorage.setItem('huda_admin_click_count', String(count));
+      sessionStorage.setItem('huda_admin_click_at', String(now));
+      const isHomePage = /(?:^|\/)(?:index\.html)?$/.test(window.location.pathname);
+      // على الرئيسية، منع إعادة التحميل لا يغيّر وظيفة الرابط (المستخدم موجود أصلاً في وجهته).
+      if (isHomePage) event.preventDefault();
+      if (count >= 15) {
+        sessionStorage.removeItem('huda_admin_click_count');
+        sessionStorage.removeItem('huda_admin_click_at');
+        event.preventDefault();
+        const inPages = /\/pages\//.test(window.location.pathname);
+        window.location.href = inPages ? 'admin-login.html' : 'pages/admin-login.html';
+      }
+    } catch (error) {
+      // عدم توفر sessionStorage لا يعطل وظيفة رابط الشعار الأصلية.
+    }
+  });
 });

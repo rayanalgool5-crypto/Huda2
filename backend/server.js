@@ -4,6 +4,7 @@ const express = require('express');
 const helmet = require('helmet');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 
 const authRoutes = require('./routes/auth');
 const progressRoutes = require('./routes/progress');
@@ -13,21 +14,25 @@ const hadithRoutes = require('./routes/hadith');
 const pushRoutes = require('./routes/push');
 const gamesRoutes = require('./routes/games'); // معطّل حالياً - انظر server.js أسفل
 const quranDownloadRoutes = require('./routes/quran-download');
-const aiRoutes = require('./routes/ai'); // مساعد "مسلم" الذكي — مفتاحه على السيرفر فقط
+const aiRoutes = require('./routes/ai');
+const aiConversationsRoutes = require('./routes/ai-conversations'); // مساعد "مسلم" الذكي — مفتاحه على السيرفر فقط
 const guessAyahRoutes = require('./routes/guess-ayah'); // لعبة "تخمين الآية" (فردي + جماعي بكود غرفة)
-const feedbackRoutes = require('./routes/feedback'); // نموذج التواصل العام عبر البريد
+const feedbackRoutes = require('./routes/feedback'); // الرسائل الداخلية ولوحة الإدارة
 const prayerPushScheduler = require('./lib/prayer-push-scheduler');
 const SQLiteSessionStore = require('./lib/sqlite-session-store');
 const { SESSION_SECRET, bearerToCookie } = require('./lib/session-token');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// Render بيضبط متغير RENDER=true تلقائياً؛ نعتبره إنتاج حتى لو نسينا ضبط NODE_ENV
-// (إذا انترك development على Render: الكوكي بتصير lax والـCORS بيحجب Netlify).
+// Render يضبط RENDER=true تلقائياً؛ وندعم أيضاً NODE_ENV صراحةً على بقية الاستضافات.
 const NODE_ENV = process.env.NODE_ENV || (process.env.RENDER ? 'production' : 'development');
 if (NODE_ENV === 'production') {
-  if (!process.env.SESSION_SECRET) console.warn('⚠ SESSION_SECRET غير مضبوط — ضبّطه بمتغيرات Render.');
-  if (!process.env.DB_PATH) console.warn('⚠ DB_PATH غير مضبوط: بدون Persistent Disk على Render بتضيع المستخدمين والجلسات مع كل نشر/إعادة تشغيل. اضبط DB_PATH=/var/data/huda.db مع Disk.');
+  if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+    throw new Error('SESSION_SECRET must be set to a random value of at least 32 characters in production.');
+  }
+  if (!process.env.DB_PATH) {
+    throw new Error('DB_PATH must point to persistent storage in production; configure a persistent volume before starting Huda.');
+  }
 }
 
 // مهم جداً: Render (وأي منصة استضافة مشابهة) بتحط التطبيق خلف بروكسي عكسي واحد،
@@ -37,7 +42,8 @@ if (NODE_ENV === 'production') {
 // "1" تعني: ثق بأول بروكسي بس (خطوة واحدة)، وهو المناسب لـ Render/Railway ومعظم
 // منصات PaaS المشابهة. لا تستخدم "true" لأنها تسمح لأي حد يزوّر عنوان الـ IP بسهولة.
 if (NODE_ENV === 'production') {
-  app.set('trust proxy', 1);
+  // Configure per host; 1 is suitable for a single reverse proxy.
+  app.set('trust proxy', process.env.TRUST_PROXY ? Number(process.env.TRUST_PROXY) : 1);
 }
 
 // Middleware
@@ -46,9 +52,13 @@ if (NODE_ENV === 'production') {
 // المحلي (عندما يشغّل هذا السيرفر الفرونت اند أيضاً)؛ CSP الافتراضية كانت
 // هتمنعها فوراً. باقي حمايات helmet (X-Frame-Options، إلخ) تبقى فعّالة.
 app.use(helmet({ contentSecurityPolicy: false }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ extended: true, limit: '100kb', parameterLimit: 100 }));
 app.use(cookieParser());
+
+// General API rate limit complements the stricter login/contact/AI route limits.
+const apiLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 600, standardHeaders: true, legacyHeaders: false, message: { message: 'طلبات كثيرة جداً. حاول بعد قليل.' } });
+app.use('/api', apiLimiter);
 
 // CORS Configuration
 // CLIENT_URL يقبل أكثر من نطاق مفصول بفواصل، لأن Netlify بيعطي رابط أساسي
@@ -128,14 +138,16 @@ app.use('/api/push', pushRoutes); // اشتراكات إشعارات الأذا�
 // هذا المسار بالكامل من الخادم حتى لا يبقى فعّالاً بالخلفية.
 // app.use('/api/games', gamesRoutes);
 app.use('/api/quran', quranDownloadRoutes); // تنزيل السورة (نص فقط في وسم ID3، بدون أي صورة غلاف)
-app.use('/api/ai', aiRoutes); // مساعد "مسلم" الذكي
+app.use('/api/ai', aiRoutes);
+app.use('/api/ai', aiConversationsRoutes); // مساعد "مسلم" الذكي
 app.use('/api/guess-ayah', guessAyahRoutes); // لعبة تخمين الآية (فردي + غرف جماعية بكود)
-app.use('/api/feedback', feedbackRoutes); // نموذج التواصل العام عبر البريد
+app.use('/api/feedback', feedbackRoutes); // الرسائل الداخلية ولوحة الإدارة
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   const aiConfigured = Boolean(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.GOOGLE_GENERATIVE_AI_API_KEY);
-  res.json({ status: 'ok', aiConfigured, timestamp: new Date().toISOString() });
+  const emailConfigured = Boolean(process.env.RESEND_API_KEY || (process.env.INFOBIP_BASE_URL && process.env.INFOBIP_API_KEY && (process.env.EMAIL_FROM || process.env.INFOBIP_FROM)));
+  res.json({ status: 'ok', aiConfigured, emailConfigured, database: 'sqlite', timestamp: new Date().toISOString() });
 });
 
 // Static files — للتطوير المحلي فقط (تشغيل الفرونت اند والباك اند معاً على نفس البورت).

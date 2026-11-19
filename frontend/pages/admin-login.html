@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2E6B57"><title>دخول الإدارة | هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/huda-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="app-shell admin-auth-page">
+  <main class="section-wrap admin-auth-wrap">
+    <section class="contact-form-card admin-auth-card">
+      <a class="brand admin-brand" href="../index.html"><img class="brand-logo" src="../assets/huda-slogan.png" alt="هُدى"></a>
+      <p class="eyebrow">منطقة خاصة</p>
+      <h1>تسجيل دخول الإدارة</h1>
+      <form id="admin-login-form" class="contact-form" novalidate>
+        <label for="admin-password">كلمة المرور</label>
+        <input id="admin-password" name="password" type="password" autocomplete="current-password" required maxlength="128" autofocus>
+        <button class="primary-button contact-submit" type="submit">دخول</button>
+        <p id="admin-login-status" class="contact-form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/admin-login.js"></script>
+  <script src="../js/mobile-navigation.js"></script>
+</body>
+</html>

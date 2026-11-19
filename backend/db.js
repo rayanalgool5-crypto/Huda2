@@ -45,7 +45,9 @@ db.transaction = (fn) => {
 };
 
 db.pragma('journal_mode = WAL');
+db.pragma('synchronous = NORMAL');
 db.pragma('foreign_keys = ON');
+db.pragma('busy_timeout = 5000');
 
 // ---------- المخطط (Schema) ----------
 db.exec(`
@@ -298,5 +300,76 @@ if (!userColumns.includes('name_change_count')) {
 if (!userColumns.includes('name_last_changed_at')) {
   db.exec("ALTER TABLE users ADD COLUMN name_last_changed_at TEXT");
 }
+
+
+
+// ---------- رسائل التواصل الداخلية ولوحة الإدارة ----------
+db.exec(`
+CREATE TABLE IF NOT EXISTS admin_accounts (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  password_hash TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sender_name TEXT NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('problem','suggestion')),
+  message TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','reviewed','replied')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_created ON contact_messages(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_contact_messages_status ON contact_messages(status);
+CREATE TABLE IF NOT EXISTS contact_attachments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  message_id INTEGER NOT NULL,
+  stored_name TEXT NOT NULL UNIQUE,
+  mime_type TEXT NOT NULL,
+  original_name TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  FOREIGN KEY (message_id) REFERENCES contact_messages(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_contact_attachments_message ON contact_attachments(message_id);
+CREATE TABLE IF NOT EXISTS contact_replies (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  message_id INTEGER NOT NULL,
+  reply_text TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (message_id) REFERENCES contact_messages(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_contact_replies_message ON contact_replies(message_id, created_at);
+`);
+
+
+// ---------- محادثات مسلم — إضافة على قاعدة هُدى الحالية ----------
+db.exec(`
+CREATE TABLE IF NOT EXISTS ai_conversations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  title TEXT NOT NULL DEFAULT 'محادثة جديدة',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_ai_conversations_user_updated
+  ON ai_conversations(user_id, updated_at DESC);
+CREATE TABLE IF NOT EXISTS ai_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  conversation_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('user','assistant')),
+  content TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (conversation_id) REFERENCES ai_conversations(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_ai_messages_conversation
+  ON ai_messages(conversation_id, id ASC);
+`);
+
+// كلمة المرور الابتدائية ممثلة بتجزئة bcrypt فقط؛ لا تُخزَّن كنص صريح.
+const initialAdminHash = '$2a$12$yIKuClaekQWU/K3ehsGGJup5O..ze4WwJ/5C8AGXxBaz5RHjyrO3G';
+db.prepare('INSERT OR IGNORE INTO admin_accounts (id, password_hash) VALUES (1, ?)').run(initialAdminHash);
+
 
 module.exports = db;

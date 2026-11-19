@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2E6B57"><title>لوحة الإدارة | هُدى</title>
+  <link rel="icon" type="image/png" href="../assets/huda-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="app-shell admin-page">
+  <header class="site-header admin-header">
+    <a class="brand" href="../index.html"><img class="brand-logo" src="../assets/huda-slogan.png" alt="هُدى"></a>
+    <strong>لوحة الإدارة</strong>
+    <div class="header-actions"><button id="admin-logout" class="logout-button" type="button">تسجيل الخروج</button></div>
+  </header>
+  <main class="section-wrap page-main admin-main">
+    <div class="admin-dashboard-heading">
+      <div><p class="eyebrow">إدارة الموقع</p><h1>لوحة الإدارة</h1></div>
+    </div>
+    <div class="admin-shortcuts">
+      <button class="admin-shortcut active" id="show-messages" type="button"><span>✉</span><strong>رسائل التواصل</strong><small>عرض الرسائل الواردة وإدارتها</small></button>
+      <button class="admin-shortcut" id="show-password" type="button"><span>⚿</span><strong>تغيير كلمة المرور</strong><small>تحديث كلمة مرور الإدارة</small></button>
+    </div>
+    <section id="admin-messages-panel" class="admin-panel">
+      <div class="admin-panel-heading"><h2>رسائل التواصل</h2><button id="refresh-messages" class="button button-secondary" type="button">تحديث</button></div>
+      <div class="admin-messages-layout">
+        <div id="admin-message-list" class="admin-message-list"><p>جارٍ تحميل الرسائل...</p></div>
+        <article id="admin-message-detail" class="admin-message-detail"><p class="admin-empty-state">اختر رسالة لعرض تفاصيلها.</p></article>
+      </div>
+    </section>
+    <section id="admin-password-panel" class="admin-panel" hidden>
+      <div class="admin-panel-heading"><h2>تغيير كلمة المرور</h2></div>
+      <form id="admin-password-form" class="contact-form admin-password-form">
+        <label for="admin-current-password">كلمة المرور الحالية</label>
+        <input id="admin-current-password" name="currentPassword" type="password" autocomplete="current-password" required>
+        <label for="admin-new-password">كلمة المرور الجديدة</label>
+        <input id="admin-new-password" name="newPassword" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+        <label for="admin-confirm-password">تأكيد كلمة المرور الجديدة</label>
+        <input id="admin-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" minlength="10" maxlength="128" required>
+        <button class="primary-button contact-submit" type="submit">حفظ كلمة المرور</button>
+        <p id="admin-password-status" class="contact-form-status" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <div id="admin-image-viewer" class="admin-image-viewer" hidden><button type="button" id="close-image-viewer" aria-label="إغلاق">×</button><img alt="الصورة المرفقة"></div>
+  <script src="../js/config.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/mobile-navigation.js"></script>
+</body>
+</html>

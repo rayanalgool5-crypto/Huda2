@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2E6B57">
+  <title>مسلم – مساعدك الذكي | هُدى</title>
+  <meta name="description" content="مسلم، مساعد هُدى الذكي للمساعدة في الأسئلة الإسلامية والتعليمية والعامة.">
+  <link rel="icon" type="image/png" href="../assets/huda-icon.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/muslim.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="app-shell muslim-page">
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="العودة إلى هدى"><img class="brand-logo" src="../assets/huda-slogan.png" alt="هُدى"></a>
+    <button class="nav-trigger" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <nav class="main-nav" aria-label="التنقل الرئيسي">
+      <a href="../index.html">الرئيسية</a><a href="quran.html">القرآن الكريم</a><a href="hadith.html">الحديث الشريف</a>
+      <a href="prayer-times.html">مواقيت الصلاة</a><a href="tasbeeh.html">التسبيح والأذكار</a>
+      <a href="stats.html">الإحصائيات والتقدم</a><a href="about.html">من أنا</a><a href="contact.html">تواصل معي</a>
+      <a class="active" href="muslim.html">مسلم</a>
+    </nav>
+    <div class="header-actions"><button class="icon-button theme-toggle" aria-label="تبديل المظهر" title="تبديل المظهر">☾</button></div>
+  </header>
+
+  <main class="muslim-layout">
+    <aside class="muslim-sidebar" id="muslim-sidebar" aria-label="المحادثات السابقة">
+      <div class="muslim-sidebar-top">
+        <a class="muslim-mini-brand" href="../index.html"><span class="muslim-mini-star">✦</span><span>مسلم <small>مساعدك الذكي</small></span></a>
+        <button class="muslim-icon-button muslim-sidebar-close" type="button" aria-label="إغلاق قائمة المحادثات">×</button>
+      </div>
+      <button class="muslim-new-chat" id="new-chat" type="button"><span>＋</span> محادثة جديدة</button>
+      <div class="muslim-history-label">محادثاتك</div>
+      <div class="muslim-conversation-list" id="conversation-list" aria-live="polite">
+        <p class="muslim-history-empty">تظهر محادثاتك السابقة هنا.</p>
+      </div>
+      <div class="muslim-sidebar-bottom"><span class="muslim-avatar">م</span><span>مسلم من هُدى</span></div>
+    </aside>
+    <div class="muslim-sidebar-scrim" id="sidebar-scrim" hidden></div>
+
+    <section class="muslim-main">
+      <header class="muslim-topbar">
+        <button class="muslim-icon-button muslim-menu-button" id="open-sidebar" type="button" aria-label="فتح المحادثات">☰</button>
+        <div class="muslim-topbar-title"><span class="muslim-topbar-star">✦</span><strong>مسلم</strong><small>مساعدك الذكي</small></div>
+        <a class="muslim-back-link" href="../index.html">هُدى <span>↗</span></a>
+      </header>
+
+      <div class="muslim-workspace">
+        <section class="muslim-welcome" id="welcome-screen">
+          <div class="muslim-star-orbit" aria-hidden="true"><span class="muslim-star">✦</span></div>
+          <p class="muslim-welcome-kicker">مساحة للمعرفة والتدبّر</p>
+          <h1>أهلاً بك، أنا <span>مسلم</span></h1>
+          <p class="muslim-welcome-copy">كيف أستطيع مساعدتك اليوم؟ اسأل، تعلّم، أو ابدأ فكرة جديدة.</p>
+          <div class="muslim-suggestions">
+            <button type="button" data-prompt="اشرح لي معنى آية من القرآن الكريم مع ذكر السورة ورقم الآية."><span>۞</span> اشرح لي آية من القرآن</button>
+            <button type="button" data-prompt="ساعدني في فهم موضوع إسلامي ووضّح لي المعلومات الموثوقة."><span>☼</span> افهم موضوعاً إسلامياً</button>
+            <button type="button" data-prompt="لدي سؤال وأريد إجابة واضحة مع توضيح المصادر عند توفرها."><span>✧</span> أجب عن سؤال لدي</button>
+            <button type="button" data-prompt="ساعدني في تنظيم وقتي للعبادة والدراسة بطريقة متوازنة."><span>◷</span> نظّم وقتي للعبادة</button>
+          </div>
+        </section>
+
+        <section class="muslim-chat-area" id="chat-area" hidden>
+          <div class="muslim-messages" id="messages" aria-live="polite" aria-relevant="additions"></div>
+          <div class="muslim-thinking" id="thinking-indicator" hidden><span></span><span></span><span></span><small>مسلم يفكر...</small></div>
+        </section>
+      </div>
+
+      <footer class="muslim-composer-wrap">
+        <form class="muslim-composer" id="message-form">
+          <textarea id="message-input" rows="1" maxlength="6000" placeholder="اكتب رسالتك إلى مسلم..." aria-label="اكتب رسالتك إلى مسلم"></textarea>
+          <button class="muslim-send-button" id="send-button" type="submit" aria-label="إرسال الرسالة"><span>➤</span></button>
+        </form>
+        <p class="muslim-disclaimer">قد يخطئ مسلم؛ تحقّق من المسائل الدينية المهمة من المصادر الموثوقة وأهل الاختصاص.</p>
+      </footer>
+    </section>
+  </main>
+
+  <script src="../js/config.js"></script>
+  <script src="../js/utils.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/mobile-navigation.js"></script>
+  <script src="../js/muslim.js"></script>
+</body>
+</html>

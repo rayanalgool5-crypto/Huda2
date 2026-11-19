@@ -21,6 +21,10 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-3.8-flash
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
       - key: INFOBIP_BASE_URL
         sync: false
       - key: INFOBIP_API_KEY
@@ -28,6 +32,4 @@ services:
       - key: INFOBIP_FROM
         sync: false
       - key: INFOBIP_REPLY_TO
-        sync: false
-      - key: FEEDBACK_TO_EMAIL
         sync: false

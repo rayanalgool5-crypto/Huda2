@@ -25,24 +25,35 @@
 
     <section class="contact-hero">
       <div class="contact-avatar"><img src="../assets/rayan-avatar.jpg" alt="ريان الغول"></div>
-      <p style="max-width:560px; color:var(--muted); margin:0">يمكنك إرسال رسالة مباشرة عبر البريد أو التواصل معي عبر منصات التواصل الاجتماعي.</p>
+      <p style="max-width:560px; color:var(--muted); margin:0">يمكنك إرسال رسالة مباشرة إلى لوحة إدارة هُدى، أو التواصل معي عبر منصات التواصل الاجتماعي.</p>
     </section>
 
     <section class="contact-form-card" aria-labelledby="contact-form-title">
       <div class="contact-form-heading">
         <p class="eyebrow">رسالة مباشرة</p>
         <h2 id="contact-form-title">أرسل لي رسالة</h2>
-        <p>اكتب بريدك الإلكتروني واسمك ورسالتك، وستصل الرسالة مباشرة إلى بريدي.</p>
+        <p>اكتب اسمك واختر تصنيف الرسالة، وستصل إلى لوحة إدارة هُدى لمراجعتها.</p>
       </div>
-      <form id="contact-form" class="contact-form" novalidate>
-        <label for="contact-email">البريد الإلكتروني</label>
-        <input id="contact-email" name="email" type="email" autocomplete="email" maxlength="160" required placeholder="example@email.com">
-
+      <form id="contact-form" class="contact-form" novalidate enctype="multipart/form-data">
         <label for="contact-name">الاسم</label>
         <input id="contact-name" name="name" type="text" autocomplete="name" maxlength="80" required placeholder="اكتب اسمك">
 
-        <label for="contact-message">رسالتك</label>
+        <label for="contact-category">تصنيف الرسالة</label>
+        <select id="contact-category" name="category" required>
+          <option value="">اختر تصنيف الرسالة</option>
+          <option value="problem">مشكلة</option>
+          <option value="suggestion">اقتراح</option>
+        </select>
+
+        <label for="contact-message">نص الرسالة</label>
         <textarea id="contact-message" name="message" rows="7" maxlength="3000" required placeholder="اكتب رسالتك هنا..."></textarea>
+
+        <div class="contact-upload-area">
+          <input id="contact-images" name="images" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden>
+          <button type="button" class="button button-secondary" id="contact-add-images">▧ إرفاق صورة</button>
+          <small>يمكن إرفاق حتى 5 صور بصيغ PNG أو JPG أو WEBP، بحد أقصى 5 ميجابايت للصورة.</small>
+          <div id="contact-image-preview" class="contact-image-preview" aria-live="polite"></div>
+        </div>
 
         <button class="primary-button contact-submit" type="submit">إرسال الرسالة</button>
         <p id="contact-form-status" class="contact-form-status" role="status" aria-live="polite"></p>
@@ -106,5 +117,6 @@
   <script src="../js/app.js"></script>
   <script src="../js/ai-assistant.js"></script>
   <script src="../js/contact.js"></script>
+  <script src="../js/mobile-navigation.js"></script>
 </body>
 </html>

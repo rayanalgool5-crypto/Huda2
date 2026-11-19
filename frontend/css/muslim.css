@@ -1,0 +1,120 @@
+
+.muslim-page { --muslim-accent:var(--emerald); --muslim-soft:var(--emerald-pale); }
+.muslim-page .site-header { position:relative; z-index:10; }
+.muslim-layout { width:min(1500px,100%); height:calc(100dvh - 82px); min-height:0; margin:0 auto; display:grid; grid-template-columns:285px minmax(0,1fr); overflow:hidden; background:var(--page); }
+.muslim-sidebar { position:relative; z-index:4; display:flex; flex-direction:column; min-height:0; height:100%; padding:20px 15px; background:var(--surface); border-inline-end:1px solid var(--line); }
+.muslim-sidebar-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.muslim-mini-brand { display:flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; font-weight:800; font-size:1.05rem; }
+.muslim-mini-brand small { display:block; margin-top:2px; color:var(--muted); font-size:.7rem; font-weight:500; }
+.muslim-mini-star { display:grid; place-items:center; width:40px; height:40px; color:var(--gold); background:var(--emerald-pale); border-radius:14px; font-size:1.55rem; }
+.muslim-icon-button { display:grid; place-items:center; width:39px; height:39px; color:var(--muted); background:transparent; border:1px solid var(--line); border-radius:12px; font-size:1.15rem; cursor:pointer; }
+.muslim-icon-button:hover { color:var(--emerald); background:var(--emerald-pale); }
+.muslim-sidebar-close { display:none; }
+.muslim-new-chat { display:flex; align-items:center; justify-content:center; gap:9px; width:100%; min-height:47px; color:#fff; background:var(--emerald); border:0; border-radius:13px; font-family:inherit; font-size:.9rem; font-weight:800; cursor:pointer; box-shadow:0 5px 14px rgba(24,74,57,.14); }
+.muslim-new-chat span { font-size:1.25rem; }
+.muslim-history-label { margin:25px 8px 10px; color:var(--muted); font-size:.75rem; font-weight:800; }
+.muslim-conversation-list { display:grid; align-content:start; gap:5px; flex:1; overflow-y:auto; }
+.muslim-history-empty { margin:5px 8px; color:var(--muted); font-size:.82rem; line-height:1.8; }
+.muslim-conversation { display:flex; align-items:center; gap:5px; min-width:0; padding:5px; border-radius:11px; }
+.muslim-conversation.active { background:var(--muslim-soft); }
+.muslim-conversation-open { flex:1; min-width:0; padding:8px 9px; overflow:hidden; color:var(--ink); background:transparent; border:0; text-align:right; text-overflow:ellipsis; white-space:nowrap; font-family:inherit; font-size:.82rem; font-weight:500; cursor:pointer; }
+.muslim-conversation.active .muslim-conversation-open { color:var(--emerald-dark); font-weight:800; }
+.muslim-conversation-actions { display:flex; gap:2px; }
+.muslim-conversation-actions button { width:28px; height:28px; color:var(--muted); background:transparent; border:0; border-radius:8px; cursor:pointer; }
+.muslim-conversation-actions button:hover { color:var(--emerald); background:var(--surface); }
+.muslim-sidebar-bottom { display:flex; align-items:center; gap:9px; padding:14px 5px 0; margin-top:12px; border-top:1px solid var(--line); color:var(--muted); font-size:.78rem; }
+.muslim-avatar { display:grid; place-items:center; width:32px; height:32px; color:#fff; background:var(--emerald); border-radius:50%; font-weight:800; }
+.muslim-main { min-width:0; min-height:0; height:100%; display:flex; flex-direction:column; overflow:hidden; background:var(--surface); }
+.muslim-topbar { height:64px; flex:0 0 64px; display:flex; align-items:center; gap:12px; padding:0 25px; border-bottom:1px solid var(--line); }
+.muslim-menu-button { display:none; }
+.muslim-topbar-title { display:flex; align-items:center; gap:8px; color:var(--ink); }
+.muslim-topbar-title strong { font-size:.95rem; }
+.muslim-topbar-title small { color:var(--muted); font-size:.74rem; }
+.muslim-topbar-star { color:var(--gold); font-size:1.3rem; }
+.muslim-back-link { margin-inline-start:auto; color:var(--muted); text-decoration:none; font-size:.8rem; font-weight:700; }
+.muslim-back-link:hover { color:var(--emerald); }
+.muslim-workspace { display:flex; flex:1 1 auto; min-height:0; overflow:hidden; }
+.muslim-welcome { width:min(850px,100%); max-height:100%; overflow-y:auto; margin:auto; padding:48px 24px 35px; text-align:center; }
+.muslim-star-orbit { width:116px; height:116px; display:grid; place-items:center; margin:0 auto 24px; border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line)); border-radius:35px; background:radial-gradient(circle,var(--muslim-soft),transparent 70%); animation:muslimOrbit 5s ease-in-out infinite; }
+.muslim-star { color:var(--gold); font-size:4.5rem; line-height:1; text-shadow:0 0 12px rgba(194,158,82,.35),0 0 32px rgba(194,158,82,.2); animation:muslimGlow 3.2s ease-in-out infinite; }
+.muslim-welcome-kicker { margin:0 0 9px; color:var(--emerald); font-size:.78rem; font-weight:800; }
+.muslim-welcome h1 { margin:0; color:var(--ink); font-size:clamp(1.8rem,4vw,2.5rem); }
+.muslim-welcome h1 span { color:var(--emerald); }
+.muslim-welcome-copy { margin:10px 0 27px; color:var(--muted); font-size:.95rem; }
+.muslim-suggestions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; max-width:660px; margin:0 auto; }
+.muslim-suggestions button { display:flex; align-items:center; gap:10px; min-height:57px; padding:12px 15px; color:var(--ink); background:var(--page); border:1px solid var(--line); border-radius:14px; text-align:right; font-family:inherit; font-size:.83rem; font-weight:700; cursor:pointer; transition:transform .18s,border-color .18s,background .18s; }
+.muslim-suggestions button:hover { transform:translateY(-2px); border-color:var(--emerald); background:var(--muslim-soft); }
+.muslim-suggestions button span { color:var(--gold); font-size:1.25rem; }
+.muslim-chat-area { width:100%; max-width:900px; height:100%; min-height:0; margin:0 auto; padding:30px 26px 20px; overflow-y:auto; overscroll-behavior:contain; }
+.muslim-messages { display:flex; flex-direction:column; gap:23px; }
+.muslim-message { display:flex; flex-direction:column; max-width:min(88%,760px); gap:7px; }
+.muslim-message.user { align-self:flex-end; }
+.muslim-message.assistant { align-self:flex-start; }
+.muslim-message-bubble { padding:14px 17px; color:var(--ink); background:var(--page); border:1px solid var(--line); border-radius:17px 17px 5px 17px; font-size:.94rem; line-height:2; white-space:pre-wrap; overflow-wrap:anywhere; }
+.muslim-message.user .muslim-message-bubble { color:var(--emerald-dark); background:var(--muslim-soft); border-color:color-mix(in srgb,var(--emerald) 20%,var(--line)); border-radius:17px 17px 17px 5px; }
+.muslim-message.assistant .muslim-message-bubble { background:transparent; border-color:transparent; padding-inline:4px; }
+.muslim-message-bubble .quran-quote { display:block; margin:12px 0; padding:12px 15px; color:var(--emerald-dark); background:var(--muslim-soft); border-inline-start:3px solid var(--gold); border-radius:10px; font-family:"Amiri Quran",serif; font-size:1.35rem; line-height:2.1; text-align:center; }
+.muslim-message-tools { display:flex; gap:7px; padding-inline:5px; }
+.muslim-message-tools button { padding:4px 8px; color:var(--muted); background:transparent; border:0; border-radius:7px; font-family:inherit; font-size:.72rem; font-weight:600; cursor:pointer; }
+.muslim-message-tools button:hover { color:var(--emerald); background:var(--muslim-soft); }
+.muslim-thinking { display:flex; align-items:center; gap:5px; padding:8px 5px 0; color:var(--muted); }
+.muslim-thinking span { width:6px; height:6px; border-radius:50%; background:var(--emerald); animation:muslimDots 1s ease-in-out infinite; }
+.muslim-thinking span:nth-child(2) { animation-delay:.15s; }.muslim-thinking span:nth-child(3) { animation-delay:.3s; }
+.muslim-thinking small { margin-inline-start:6px; font-size:.75rem; }
+.muslim-composer-wrap { position:relative; z-index:5; flex:0 0 auto; width:min(900px,100%); margin:0 auto; padding:12px 24px max(14px, env(safe-area-inset-bottom)); background:var(--surface); }
+.muslim-composer { display:flex; align-items:flex-end; gap:10px; padding:9px; background:var(--page); border:1px solid var(--line); border-radius:19px; box-shadow:0 5px 22px rgba(20,50,38,.05); }
+.muslim-composer:focus-within { border-color:color-mix(in srgb,var(--emerald) 55%,var(--line)); box-shadow:0 0 0 3px rgba(46,107,87,.08); }
+.muslim-composer textarea { flex:1; min-width:0; max-height:180px; min-height:43px; resize:none; padding:11px 12px; color:var(--ink); background:transparent; border:0; outline:0; font-family:inherit; font-size:.93rem; font-weight:500; line-height:1.7; }
+.muslim-composer textarea::placeholder { color:var(--muted); }
+.muslim-send-button { flex:0 0 43px; width:43px; height:43px; display:grid; place-items:center; color:#fff; background:var(--emerald); border:0; border-radius:13px; font-size:1.2rem; cursor:pointer; transition:transform .18s,background .18s; }
+.muslim-send-button:hover:not(:disabled) { transform:translateY(-2px); background:var(--emerald-dark); }
+.muslim-send-button:disabled { opacity:.5; cursor:wait; }
+.muslim-disclaimer { margin:8px 0 0; color:var(--muted); text-align:center; font-size:.68rem; line-height:1.6; }
+.muslim-sidebar-scrim[hidden] { display:none; }
+@keyframes muslimOrbit { 0%,100% { transform:translateY(0) rotate(-2deg); } 50% { transform:translateY(-5px) rotate(2deg); } }
+@keyframes muslimGlow { 0%,100% { opacity:.86; text-shadow:0 0 10px rgba(194,158,82,.25),0 0 25px rgba(194,158,82,.15); } 50% { opacity:1; text-shadow:0 0 18px rgba(194,158,82,.55),0 0 42px rgba(194,158,82,.25); } }
+@keyframes muslimDots { 0%,70%,100% { opacity:.35; transform:translateY(0); } 35% { opacity:1; transform:translateY(-4px); } }
+@media (max-width:1024px) {
+  /* Reserve room for the 66px site header and the fixed 82px bottom navigation. */
+  .muslim-layout { height:calc(100dvh - 148px); }
+}
+@media (max-width:900px) {
+  .muslim-layout { grid-template-columns:250px minmax(0,1fr); }
+  .muslim-sidebar { padding-inline:12px; }
+}
+@media (max-width:760px) {
+  .muslim-layout { height:calc(100dvh - 148px); min-height:0; display:block; overflow:hidden; }
+  .muslim-sidebar { position:fixed; z-index:1500; inset-block:0; inset-inline-start:0; width:min(310px,86vw); min-height:100dvh; transform:translateX(110%); transition:transform .24s ease; box-shadow:0 0 35px rgba(0,0,0,.12); }
+  html[dir="rtl"] .muslim-sidebar { transform:translateX(110%); }
+  .muslim-sidebar.is-open,html[dir="rtl"] .muslim-sidebar.is-open { transform:translateX(0); }
+  .muslim-sidebar-close,.muslim-menu-button { display:grid; }
+  .muslim-sidebar-scrim:not([hidden]) { position:fixed; z-index:1490; inset:0; background:rgba(7,20,15,.42); }
+  .muslim-main { height:100%; min-height:0; }
+  .muslim-topbar { height:57px; flex-basis:57px; padding:0 12px; }
+  .muslim-workspace { min-height:0; height:auto; flex:1 1 auto; }
+  .muslim-welcome { padding:34px 17px 22px; }
+  .muslim-star-orbit { width:92px; height:92px; margin-bottom:18px; border-radius:28px; }
+  .muslim-star { font-size:3.7rem; }
+  .muslim-welcome-copy { font-size:.86rem; margin-bottom:20px; }
+  .muslim-suggestions { grid-template-columns:1fr; gap:8px; }
+  .muslim-suggestions button { min-height:49px; }
+  .muslim-chat-area { padding:20px 14px 14px; }
+  .muslim-message { max-width:94%; }
+  .muslim-message-bubble { padding:11px 13px; font-size:.88rem; }
+  .muslim-composer-wrap { padding:8px 11px max(10px, env(safe-area-inset-bottom)); }
+  .muslim-composer { padding:7px; }
+  .muslim-composer textarea { font-size:.87rem; }
+  .muslim-disclaimer { font-size:.61rem; }
+}
+@media (prefers-reduced-motion:reduce) { .muslim-star-orbit,.muslim-star,.muslim-thinking span { animation:none!important; } }
+
+.muslim-inline-error,.muslim-login-hint { margin:10px auto; padding:11px 14px; color:#8b4b20; background:#fff6e9; border:1px solid #ecd8bb; border-radius:12px; font-size:.82rem; line-height:1.7; }
+.muslim-login-hint { margin:0 0 9px; color:var(--muted); background:var(--page); border-color:var(--line); text-align:center; }
+.muslim-login-hint a { color:var(--emerald); font-weight:800; }
+
+.muslim-thinking::before { content:'✦'; margin-inline-end:4px; color:var(--gold); font-size:1.05rem; animation:muslimGlow 1.25s ease-in-out infinite; }
+
+/* ChatGPT-style focus mode: keep the composer anchored while the conversation scrolls. */
+.muslim-page.is-composing .muslim-suggestions { display:none; }
+.muslim-page.is-composing .muslim-welcome { padding-top:30px; padding-bottom:20px; }
+.muslim-page .muslim-composer-wrap { box-shadow:0 -8px 24px rgba(20,50,38,.035); }

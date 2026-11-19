@@ -23,3 +23,18 @@ frontend/node_modules/
 # ملفات نظام
 .DS_Store
 Thumbs.db
+
+# مرفقات رسائل التواصل (تُحفظ خارج الملفات العامة)
+backend/data/contact-uploads/*
+!backend/data/contact-uploads/.gitkeep
+
+# Additional private files
+.env*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+backend/data/contact-uploads/*
+!backend/data/contact-uploads/.gitkeep
